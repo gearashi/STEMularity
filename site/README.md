@@ -11,7 +11,7 @@ Run these from the repository root.
 | Command | What it does |
 | --- | --- |
 | `npm run build` | Builds the site into `site/dist/`. |
-| `npm run preview` | Builds the site, then serves it at http://127.0.0.1:8788. Stop it with Ctrl+C. |
+| `npm run preview` | Builds the site, then serves it at http://127.0.0.1:8788. You can run `npm run build` again while it serves. Stop it with Ctrl+C. |
 | `npm test` | Runs all tests, including [`test/site-build.test.mjs`](../test/site-build.test.mjs). |
 | `npm run check` | Validates the data, runs the tests, then builds the site. |
 
@@ -42,10 +42,10 @@ The build is deterministic: the same data always gives byte-identical files. Not
 | --- | --- |
 | `index.html` | The problem list, with search, sorting and filters. |
 | `problems/<id>/index.html` | One page per problem, with its progress map. |
-| `about/index.html` | What STEMularity is, the open-knowledge pledge, and what every status, checkpoint status, AI effort level and rating means. |
+| `about/index.html` | What STEMularity is, the open-knowledge pledge, and what every status, checkpoint status, AI effort level, rating and field means. |
 | `404.html` | The "page not found" page. |
 | `problems.json` | Every problem in one file: `{ "license": "CC-BY-4.0", "count": n, "problems": [...] }`. |
-| `problems/<id>.json` | One problem, exactly as it is in `data/problems/`. |
+| `problems/<id>.json` | One problem: the same data as `data/problems/<id>.json`, pretty-printed, with `<`, `>` and `&` written as `\u` escapes. The line and paragraph separators U+2028 and U+2029 are escaped too. |
 | `schema/problem.schema.json`, `schema/vocabulary.json` | The data format and labels, so the JSON files can be checked and read. |
 | `assets/styles.css`, `assets/app.js`, `assets/stemgu.svg` | Styles, the list page's script, and the STEMgu sprite (also the favicon). |
 | `_headers` | Security headers for Cloudflare Pages. |
@@ -61,7 +61,7 @@ The JSON files are a first, static step toward the API for AI agents in the [roa
 | `serve.mjs` | The local preview server. |
 | `src/config.mjs` | The GitHub repository address and branch. Change them here if the repository moves. |
 | `src/html.mjs` | `escapeHtml()`, the `html` template tag, and helpers for safe links. |
-| `src/format.mjs` | Dates ("March 2019") and shortened summaries. |
+| `src/format.mjs` | Dates ("March 2019", "430 BCE") and shortened summaries. |
 | `src/icons.mjs` | The pixel-art checkpoint markers. |
 | `src/layout.mjs` | The header, sample-data banner and footer shared by every page. |
 | `src/pages.mjs` | The pages themselves. |
@@ -69,19 +69,19 @@ The JSON files are a first, static step toward the API for AI agents in the [roa
 
 ## The problem list
 
-`index.html` lists every problem, A to Z, as plain HTML. Without JavaScript you get the full list, and the controls stay hidden.
+`index.html` lists every problem, A to Z, as plain HTML. Without JavaScript you get the full list, the controls are not shown, and a note in their place says that search, sorting and filters need JavaScript. With JavaScript the controls keep their place from the first paint, out of sight until `app.js` has set them up, and the filters start folded (`app.js` opens them on wide screens, or when some are in use), so the list never moves when the controls appear. On wide screens the list always uses the wide right-hand column.
 
-With JavaScript, `assets/app.js` shows the controls: search, sort, sort order, and filters by status and field. It reads the `data-*` attributes on each problem card and never fetches anything. It keeps the current view in the address, so a view can be bookmarked or shared:
+With JavaScript, `assets/app.js` shows the controls: search, sort, sort order, and filters by status and field. It reads the `data-*` attributes on each problem card and never fetches anything. It keeps the current view in the address, so a view can be bookmarked or shared, and the view follows the address when you go Back or Forward:
 
 | Parameter | Values | Default (left out of the address) |
 | --- | --- | --- |
-| `q` | Search text, matched against the name, other names, category, field, tags and summary. | Empty |
+| `q` | Search words, matched against the name, other names, category, field, tags and summary. Every word must match, in any order. Hyphens count as spaces, so `protein-folding` also finds "protein folding". | Empty |
 | `sort` | `name`, `category`, `effort`, `work-left`, `significance` | `name` |
 | `dir` | `asc` or `desc` | `asc`, except `desc` for `significance` |
 | `status` | Statuses to show, separated by commas, such as `open,unsolved`. Empty means none. | All |
 | `field` | Fields to show, separated by commas, such as `physics,chemistry`. | All |
 
-Unknown values are ignored. Ties are sorted by name, then id. Solved and resolved problems have no ratings, so they always come last when sorting by work left or significance.
+Unknown values are ignored. Ties are sorted by name, then id. Solved and resolved problems have no ratings, so they always come last when sorting by work left or significance. When nothing matches, a button clears the search and filters, and keeps the sort.
 
 ## Rules for changing the site
 
@@ -90,6 +90,7 @@ Unknown values are ignored. Ties are sorted by name, then id. Solved and resolve
 - **No outside requests.** No web fonts, CDNs, analytics or images from other websites. The policy blocks them too.
 - **Relative links.** Pages link to each other and to assets with relative addresses (`../../assets/styles.css`), so the site works at any base path and when opened from disk. The one exception is `404.html`: Cloudflare Pages serves it at whatever address was not found, so its links start at the site root (`/`).
 - **Labels come from the vocabulary.** Use `data/schema/vocabulary.json` for the names and meanings of statuses, fields, effort levels and ratings.
+- **No line starts with a dot.** In lists such as "Physics · Number theory", put a no-break space before each dot (`SEP` in `src/pages.mjs`), so a line can break only after it.
 - **Accessibility.** Keep one `h1` per page, labels on every control, visible focus, status shown as text and not only by color, and WCAG AA contrast in both the light and the dark theme.
 
 The tests in [`test/site-build.test.mjs`](../test/site-build.test.mjs) check most of these rules.

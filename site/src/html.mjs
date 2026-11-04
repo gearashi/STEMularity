@@ -53,7 +53,7 @@ export function raw(markup) {
 }
 
 /**
- * Returns the URL, normalised, when it is an absolute http: or https: URL.
+ * Returns the URL, normalized, when it is an absolute http: or https: URL.
  * Returns null for anything else: javascript:, data:, relative or broken URLs.
  */
 export function safeUrl(value) {

@@ -1,6 +1,6 @@
 /*
   STEMularity site styles.
-  Clean and readable first, with a light retro-game flavour: hard shadows,
+  Clean and readable first, with a light retro-game flavor: hard shadows,
   pixel markers and a dotted map path. Light and dark themes follow the
   visitor's system setting. No web fonts and no external requests.
   The Content Security Policy blocks inline styles, so every visual width
@@ -634,12 +634,46 @@ main {
     grid-template-columns: 17rem minmax(0, 1fr);
     align-items: start;
   }
+
+  /* Fixed columns: while the controls are still hidden (before app.js runs,
+     or without JavaScript), the list stays in the wide column, so nothing
+     moves when the controls appear. */
+  .index-layout > noscript,
+  .index-layout > .controls {
+    grid-column: 1;
+  }
+
+  .index-layout > .results {
+    grid-column: 2;
+  }
+}
+
+/* Shown in place of the controls when JavaScript is off. */
+.noscript-note {
+  margin: 0;
+  padding: 0.75rem 1rem;
+  background: var(--surface);
+  border: 2px solid var(--line-soft);
+  font-size: 0.95rem;
 }
 
 .controls {
   display: grid;
   gap: 1rem;
   min-width: 0;
+}
+
+/* The controls keep their place from the first paint but stay out of sight
+   until app.js has set them up, so nothing moves when they appear. Without
+   JavaScript they are not shown at all: the noscript note takes their place. */
+.controls:not(.is-ready) {
+  visibility: hidden;
+}
+
+@media (scripting: none) {
+  .index-layout > .controls {
+    display: none;
+  }
 }
 
 .control > label,
@@ -832,6 +866,12 @@ select {
   gap: 0.5rem;
   margin: 0;
   font-weight: 600;
+}
+
+/* Wide enough for "Medium" and "10/10", so the bars in a card line up. */
+.card-facts .card-value {
+  min-width: 4.2em;
+  font-variant-numeric: tabular-nums;
 }
 
 .card-facts .not-rated dd {
@@ -1113,6 +1153,12 @@ select {
 
 .cp-description {
   margin: 0 0 0.5rem;
+}
+
+/* Summaries and checkpoint descriptions may run over several lines. */
+.summary-text,
+.cp-description {
+  white-space: pre-line;
 }
 
 .cp-meta {

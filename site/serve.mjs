@@ -10,9 +10,12 @@
 // paths with 404.html. It also applies the rules in _headers whose pattern is
 // an exact path or ends in /*, so the preview runs under the same Content
 // Security Policy as Cloudflare Pages.
+//
+// A rebuild while the server runs deletes and rewrites the files. Each file is
+// read in full before any header is sent, so a file that disappears gets the
+// normal 404 answer, and any other read error a 500, instead of a crash.
 
 import http from 'node:http';
-import { createReadStream } from 'node:fs';
 import { readFile, stat } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -83,29 +86,39 @@ async function handle(req, res, root) {
   }
   if (!info?.isFile()) return sendNotFound(req, res, root);
 
-  await sendFile(req, res, root, file, 200, pathname, info.size);
+  const body = await readIfThere(file);
+  if (body === null) return sendNotFound(req, res, root);
+  await sendFile(req, res, root, file, body, 200, pathname);
 }
 
-async function sendFile(req, res, root, file, status, pathname, size) {
+// The file's contents, or null when it is gone (for example deleted by a
+// rebuild after stat() saw it). Other errors are thrown, and become a 500.
+async function readIfThere(file) {
+  try {
+    return await readFile(file);
+  } catch (err) {
+    if (err.code === 'ENOENT' || err.code === 'ENOTDIR') return null;
+    throw err;
+  }
+}
+
+async function sendFile(req, res, root, file, body, status, pathname) {
   const headers = {
     'Content-Type': TYPES[path.extname(file).toLowerCase()] ?? 'application/octet-stream',
-    'Content-Length': size,
+    'Content-Length': body.length,
     'Cache-Control': 'no-store',
     ...(await headerRules(root, pathname)),
   };
   res.writeHead(status, headers);
-  if (req.method === 'HEAD') {
-    res.end();
-    return;
-  }
-  createReadStream(file).pipe(res);
+  res.end(req.method === 'HEAD' ? undefined : body);
 }
 
 async function sendNotFound(req, res, root) {
   const file = path.join(root, '404.html');
   const info = await stat(file).catch(() => null);
-  if (!info?.isFile()) return sendText(res, 404, 'Not found\n');
-  await sendFile(req, res, root, file, 404, '/404.html', info.size);
+  const body = info?.isFile() ? await readIfThere(file) : null;
+  if (body === null) return sendText(res, 404, 'Not found\n');
+  await sendFile(req, res, root, file, body, 404, '/404.html');
 }
 
 function sendText(res, status, text) {

@@ -5,8 +5,8 @@
 // Labels and descriptions come from data/schema/vocabulary.json. Every value
 // from the data goes through html``, which escapes it.
 
-import { externalLink, html } from './html.mjs';
-import { formatDate, plural, truncate } from './format.mjs';
+import { externalLink, html, raw } from './html.mjs';
+import { formatDate, formatYear, isBceDate, plural, truncate } from './format.mjs';
 import { marker, markerSprite } from './icons.mjs';
 import { layout } from './layout.mjs';
 import { CC_BY_URL, REPO_URL, repoEditUrl, repoFileUrl } from './config.mjs';
@@ -22,6 +22,11 @@ const SUMMARY_ORDER = ['in-progress', 'disputed', 'dead-end', 'not-started'];
 
 // The two ratings, in display order. The schema allows exactly these keys.
 const RATINGS = ['work_left', 'significance'];
+
+// Goes between the items of a list such as "Physics · Number theory". The
+// no-break space ties each dot to the text before it, so a line can break
+// after a dot but never before one: no line starts with a dot.
+const SEP = raw('&nbsp;· ');
 
 /**
  * @param {{problems: object[], vocabulary: object}} input Valid problems,
@@ -87,7 +92,7 @@ function sortOptions(v) {
   const workLeft = v.label('ratings', 'work_left');
   const significance = v.label('ratings', 'significance');
   return [
-    { value: 'name', label: 'Name (A-Z)', noun: 'name', dir: 'asc', asc: 'A to Z', desc: 'Z to A' },
+    { value: 'name', label: 'Name', noun: 'name', dir: 'asc', asc: 'A to Z', desc: 'Z to A' },
     { value: 'category', label: 'Category', noun: 'category', dir: 'asc', asc: 'A to Z', desc: 'Z to A' },
     { value: 'effort', label: 'AI effort', noun: 'AI effort', dir: 'asc', asc: `${low} to ${high}`, desc: `${high} to ${low}` },
     { value: 'work-left', label: workLeft, noun: workLeft.toLowerCase(), dir: 'asc', asc: 'least first', desc: 'most first' },
@@ -119,7 +124,10 @@ function contributors(people, v) {
   return people.map((person, i) => html`${i ? ', ' : ''}<span class="contributor">${person.url ? externalLink(person.url, person.name) : person.name} <span class="kind">(${v.label('contributor_kind', person.kind)})</span></span>`);
 }
 
+// HTML dates have no way to write a year BCE (their years start at 1), so
+// those are plain text.
 function dateTime(value) {
+  if (isBceDate(value)) return formatDate(value);
   return html`<time datetime="${value}">${formatDate(value)}</time>`;
 }
 
@@ -136,7 +144,7 @@ function renderIndex(ctx) {
   const checkbox = (name, key, label, count) =>
     html`<label class="check"><input type="checkbox" name="${name}" value="${key}" checked> <span>${label}</span> <span class="check-count">(${count})</span></label>`;
 
-  const controls = html`<form id="controls" class="controls panel" role="search" aria-label="Search, sort and filter problems" autocomplete="off" hidden>
+  const controls = html`<form id="controls" class="controls panel" role="search" aria-label="Search, sort and filter problems" autocomplete="off">
       <div class="control">
         <label for="q">Search</label>
         <input type="search" id="q" name="q" autocomplete="off" spellcheck="false" maxlength="200" placeholder="Name, topic or tag">
@@ -150,7 +158,7 @@ ${sorts.map((sort, i) => html`            <option value="${sort.value}" data-dir
           <button type="button" id="sort-dir" class="button">Order: ${sorts[0][sorts[0].dir]}</button>
         </div>
       </div>
-      <details id="filters" class="filters" open>
+      <details id="filters" class="filters">
         <summary>Filter by status and field</summary>
         <div class="filter-groups">
           <fieldset class="checks">
@@ -188,12 +196,16 @@ ${problems.map((problem) => problemCard(problem, ctx))}      </ul>
     <div class="dialog"><p>STEMgu found no problems in the index yet.</p></div>
   </div>`;
 
+  // Takes the place of the controls when JavaScript is off.
+  const noscript = html`<noscript><p class="noscript-note">Search, sorting and filters need JavaScript. Without it, all problems are listed A to Z.</p></noscript>`;
+
   const main = html`${total ? markerSprite() : ''}
 <div class="wrap">
   <h1>Problems</h1>
   <p class="lede">An open index of STEM problems: open, unsolved, solved and resolved. Each problem has a progress map of checkpoints, so you can see what is done, what failed and what is next before you start work with AI.</p>
   <p class="lede-link"><a href="about/index.html#statuses">What the statuses, checkpoints and ratings mean</a></p>
   ${total === 0 ? nothingYet : html`<div class="index-layout">
+    ${noscript}
     ${controls}
     ${results}
   </div>`}
@@ -213,33 +225,33 @@ ${problems.map((problem) => problemCard(problem, ctx))}      </ul>
 function problemCard(problem, { v }) {
   const fieldLabel = v.label('field', problem.field);
   const effort = effortInfo(problem.ai_effort, v);
-  const tags = problem.tags ?? [];
+  // app.js matches each search word against this text (hyphens count as spaces).
   const search = [
     problem.name,
     ...(problem.aliases ?? []),
     problem.category,
     fieldLabel,
-    ...tags,
-    ...tags.map((tag) => tag.replace(/-/g, ' ')),
+    ...(problem.tags ?? []),
     problem.summary,
   ].join(' ').replace(/\s+/g, ' ').toLowerCase();
   const ratings = problem.ratings;
   const ratingData = ratings
     ? html` data-work-left="${ratings.work_left}" data-significance="${ratings.significance}"`
     : '';
+  // Each value has a fixed minimum width (.card-value), so the bars in a card line up.
   const ratingFacts = ratings
     ? RATINGS.map((key) => html`
-            <div><dt>${v.label('ratings', key)}</dt><dd>${ratings[key]}/10 ${pips(ratings[key], 10)}</dd></div>`)
+            <div><dt>${v.label('ratings', key)}</dt><dd><span class="card-value">${ratings[key]}/10</span> ${pips(ratings[key], 10)}</dd></div>`)
     : html`
             <div class="not-rated"><dt class="visually-hidden">Ratings</dt><dd>Not rated (${v.label('status', problem.status).toLowerCase()})</dd></div>`;
 
   return html`        <li class="card" data-id="${problem.id}" data-name="${problem.name}" data-category="${problem.category}" data-field="${problem.field}" data-status="${problem.status}" data-effort="${effort.rank}"${ratingData} data-search="${search}">
           <h2 class="card-title"><a href="problems/${problem.id}/index.html">${problem.name}</a></h2>
           <p class="card-badges">${statusBadge(problem.status, v)}${sampleBadge(problem)}</p>
-          <p class="card-meta">${fieldLabel} · ${problem.category}</p>
+          <p class="card-meta">${fieldLabel}${SEP}${problem.category}</p>
           <p class="card-summary">${truncate(problem.summary, 200)}</p>
           <dl class="card-facts">
-            <div><dt>AI effort</dt><dd>${effort.label} ${pips(effort.level, effort.levels)}</dd></div>${ratingFacts}
+            <div><dt>AI effort</dt><dd><span class="card-value">${effort.label}</span> ${pips(effort.level, effort.levels)}</dd></div>${ratingFacts}
           </dl>
           ${miniMap(problem, v)}
         </li>
@@ -272,7 +284,7 @@ function renderProblem(problem, ctx) {
     ${problem.aliases?.length ? html`<p class="aliases">Also known as: ${problem.aliases.join('; ')}</p>` : ''}
     <p class="badges">${statusBadge(problem.status, v)}${sampleBadge(problem)}</p>
     <p class="status-description"><strong>${statusLabel}:</strong> ${v.description('status', problem.status)}</p>
-    <p class="problem-meta"><a href="${root}index.html?field=${problem.field}">${v.label('field', problem.field)}</a> · ${problem.category}</p>
+    <p class="problem-meta"><a href="${root}index.html?field=${problem.field}">${v.label('field', problem.field)}</a>${SEP}${problem.category}</p>
     ${tags.length ? html`<div class="tags"><span class="tags-label">Tags:</span>
       <ul role="list">${tags.map((tag) => html`<li><a href="${root}index.html?q=${encodeURIComponent(tag)}">${tag}</a></li>`)}</ul>
     </div>` : ''}
@@ -281,7 +293,7 @@ function renderProblem(problem, ctx) {
 
   const summary = html`<section class="summary" aria-labelledby="summary-title">
     <h2 id="summary-title">Summary</h2>
-    <p>${problem.summary}</p>
+    <p class="summary-text">${problem.summary}</p>
     ${problem.updated ? html`<p class="updated">Entry updated ${dateTime(problem.updated)}</p>` : ''}
   </section>`;
 
@@ -356,8 +368,8 @@ function progressSummary(steps, v) {
     const label = v.label('checkpoint_status', key).toLowerCase();
     parts.push(`${n} ${key === 'dead-end' && n !== 1 ? `${label}s` : label}`);
   }
-  // Each count stays on one line; the line may break between counts.
-  return parts.map((part, i) => html`${i ? ' · ' : ''}<span class="nowrap">${part}</span>`);
+  // Each count stays on one line; the line may break after a dot.
+  return parts.map((part, i) => html`${i ? SEP : ''}<span class="nowrap">${part}</span>`);
 }
 
 function progressSection(problem, v) {
@@ -372,7 +384,7 @@ function progressSection(problem, v) {
           <p class="cp-step"><a class="cp-self" href="#${anchor}">Checkpoint ${i + 1} of ${steps.length}<span class="visually-hidden">, link to this checkpoint</span></a></p>
           <h3 class="cp-title"><span class="cp-status">${v.label('checkpoint_status', step.status)}<span class="visually-hidden">:</span></span> ${step.title}</h3>
           ${step.description ? html`<p class="cp-description">${step.description}</p>` : ''}
-          ${step.by?.length || step.date ? html`<p class="cp-meta">${step.by?.length ? html`<span>By ${contributors(step.by, v)}</span>` : ''}${step.by?.length && step.date ? ' · ' : ''}${step.date ? html`<span class="cp-when">${dateLabel} ${dateTime(step.date)}</span>` : ''}</p>` : ''}
+          ${step.by?.length || step.date ? html`<p class="cp-meta">${step.by?.length ? html`<span>By ${contributors(step.by, v)}</span>` : ''}${step.by?.length && step.date ? SEP : ''}${step.date ? html`<span class="cp-when">${dateLabel} ${dateTime(step.date)}</span>` : ''}</p>` : ''}
           ${step.links?.length ? html`<ul class="cp-links" role="list">${step.links.map((link) => html`<li>${externalLink(link.url, link.title)}</li>`)}</ul>` : ''}
         </div>
       </li>`;
@@ -404,8 +416,8 @@ function sourcesSection(problem, v) {
     <p class="note">STEMularity links to sources and never hosts copies.</p>
     <ul class="source-list" role="list">
 ${problem.sources.map((source) => {
-    const meta = [(source.authors ?? []).join(', '), source.year].filter((part) => part !== '' && part !== undefined);
-    return html`      <li><span class="badge badge-kind">${v.label('source_kind', source.kind)}</span> ${externalLink(source.url, source.title)}${meta.length ? html`<span class="source-meta"> · ${meta.join(' · ')}</span>` : ''}</li>
+    const meta = [(source.authors ?? []).join(', '), formatYear(source.year)].filter((part) => part !== '');
+    return html`      <li><span class="badge badge-kind">${v.label('source_kind', source.kind)}</span> ${externalLink(source.url, source.title)}${meta.length ? html`<span class="source-meta">${meta.map((part) => html`${SEP}${part}`)}</span>` : ''}</li>
 `;
   })}    </ul>
   </section>`;
@@ -433,10 +445,10 @@ ${items.map(([term, text]) => html`    <div><dt>${term}</dt><dd>${text}</dd></di
   <h2 id="pledge">The open-knowledge pledge</h2>
   <ul class="pledge">
     <li><strong>No gatekeeping.</strong> Everything here is free to read, with no account and no paywall. You can <a href="${root}problems.json">download all the data at once</a>, and <a href="${repoFileUrl('CONTRIBUTING.md')}" rel="noopener noreferrer">anyone can contribute</a>.</li>
-    <li><strong>No patents.</strong> Ideas and solutions recorded here are published openly, for everyone. The project will never seek patents on them, and contributors agree not to seek patents on what they contribute.</li>
+    <li><strong>No patents.</strong> Ideas and solutions recorded here are published openly, for everyone. The project will never seek patents on them, and contributors agree not to seek patents on what they contribute. This is a community commitment, not a legal agreement or a patent license.</li>
     <li><strong>Link, don't copy.</strong> Sources are linked, never hosted. STEMularity never stores copies of papers.</li>
   </ul>
-  <p>Code is under the <a href="${repoFileUrl('LICENSE')}" rel="noopener noreferrer">MIT license</a>. Content, including the problem data and the STEMgu mascot, is under <a href="${CC_BY_URL}" rel="noopener noreferrer">CC BY 4.0</a>: you can share and adapt it if you give credit. The full pledge is in the <a href="${repoFileUrl('README.md')}#the-open-knowledge-pledge" rel="noopener noreferrer">project README</a>.</p>
+  <p>Code is under the <a href="${repoFileUrl('LICENSE')}" rel="noopener noreferrer">MIT license</a>. Content, including the problem data and artwork such as STEMgu, is under <a href="${CC_BY_URL}" rel="noopener noreferrer">CC BY 4.0</a>: you can share and adapt it if you give credit. The full pledge is in the <a href="${repoFileUrl('README.md')}#the-open-knowledge-pledge" rel="noopener noreferrer">project README</a>.</p>
 
   <h2 id="statuses">Problem statuses</h2>
   ${defs(v.keys('status').map((key) => [statusBadge(key, v), v.description('status', key)]))}
@@ -449,7 +461,7 @@ ${items.map(([term, text]) => html`    <div><dt>${term}</dt><dd>${text}</dd></di
   ]))}
 
   <h2 id="ai-effort">Recommended AI effort</h2>
-  <p>How much AI reasoning effort to plan for when you work on a problem's next open checkpoint, from lowest to highest.</p>
+  <p>The recommended AI reasoning effort for working on the problem now: for the first open checkpoint on its map (one that is in progress, not started or disputed), or, if none is open, for checking and building on the recorded work. The levels, from lowest to highest:</p>
   ${defs(levels.map((level, i) => [html`${level.label ?? level.key} ${pips(i + 1, levels.length)}`, level.description ?? '']))}
 
   <h2 id="ratings">Ratings</h2>
@@ -460,15 +472,16 @@ ${items.map(([term, text]) => html`    <div><dt>${term}</dt><dd>${text}</dd></di
   }))}
 
   <h2 id="fields">Fields</h2>
-  <p>Every problem belongs to one broad field, used for filtering: ${v.keys('field').map((key) => v.label('field', key)).join(', ')}.</p>
+  <p>Every problem belongs to one broad field, used for filtering.</p>
+  ${defs(v.keys('field').map((key) => [v.label('field', key), v.description('field', key)]))}
 
   <h2 id="data">Data for people and AI agents</h2>
   <ul>
     <li><a href="${root}problems.json">problems.json</a>: every problem in one file.</li>
     <li>problems/&lt;id&gt;.json: one problem${example ? html`, for example <a href="${root}problems/${example.id}.json">problems/${example.id}.json</a>` : ''}.</li>
-    <li><a href="${root}schema/problem.schema.json">schema/problem.schema.json</a> and <a href="${root}schema/vocabulary.json">schema/vocabulary.json</a>: the data format, and the labels for every value.</li>
+    <li><a href="${root}schema/problem.schema.json">schema/problem.schema.json</a> and <a href="${root}schema/vocabulary.json">schema/vocabulary.json</a>: the data format, and the labels and descriptions for every value.</li>
   </ul>
-  <p>These static files are a first step toward an API for AI agents. The data is under CC BY 4.0.</p>
+  <p>These static files are a first step toward an API for AI agents. The problem data is under CC BY 4.0; the schema and vocabulary files are under MIT.</p>
 
   <h2 id="contribute">Contribute</h2>
   <p>Every problem is a JSON file in the <a href="${REPO_URL}" rel="noopener noreferrer">GitHub repository</a>. To add progress or fix a mistake, use the "Improve this entry" link on a problem's page, or open a pull request. The <a href="${repoFileUrl('CONTRIBUTING.md')}" rel="noopener noreferrer">contributing guide</a> explains the steps, and the <a href="${repoFileUrl('docs/DATA_FORMAT.md')}" rel="noopener noreferrer">data format guide</a> explains every field.</p>
@@ -482,7 +495,7 @@ ${items.map(([term, text]) => html`    <div><dt>${term}</dt><dd>${text}</dd></di
 
   return layout({
     title: 'About',
-    description: 'What STEMularity is, its open-knowledge pledge, and what every status, checkpoint, AI effort level and rating means.',
+    description: 'What STEMularity is, its open-knowledge pledge, and what every status, checkpoint, AI effort level, rating and field means.',
     root,
     current: 'about',
     hasSamples: ctx.hasSamples,

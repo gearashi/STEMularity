@@ -4,20 +4,26 @@
 
 import { after, before, describe, it } from 'node:test';
 import assert from 'node:assert/strict';
+import { spawnSync } from 'node:child_process';
 import { existsSync } from 'node:fs';
-import { cp, mkdir, mkdtemp, readFile, readdir, rm, writeFile } from 'node:fs/promises';
+import fsPromises, { cp, mkdir, mkdtemp, readFile, readdir, rm, writeFile } from 'node:fs/promises';
 import http from 'node:http';
+import { syncBuiltinESMExports } from 'node:module';
 import os from 'node:os';
 import path from 'node:path';
 import { BUILD_MARKER, BuildError, build, checkOutDir } from '../site/build.mjs';
 import { createServer } from '../site/serve.mjs';
 import { escapeHtml, externalLink, html, safeUrl } from '../site/src/html.mjs';
-import { formatDate, truncate } from '../site/src/format.mjs';
+import { formatDate, formatYear, truncate } from '../site/src/format.mjs';
 import { DEFAULT_DATA_DIR, ROOT, loadProblems } from '../scripts/lib/problems.mjs';
+
+// Child processes must not think they are part of this test run.
+const { NODE_TEST_CONTEXT, ...CHILD_ENV } = process.env;
 
 const NASTY = '<script>alert(1)</script>';
 
-// A valid problem whose text tries every way to break out of HTML.
+// A valid problem whose text tries every way to break out of HTML. The schema
+// allows line breaks only in the summary and checkpoint descriptions.
 const nastyProblem = {
   id: 'nasty-escaping-test',
   name: `Nasty ${NASTY} "quoted" & 'single' x" onmouseover="alert(2)`,
@@ -26,14 +32,14 @@ const nastyProblem = {
   category: '<b>Bold</b> & "category"',
   tags: ['escaping-test'],
   status: 'unsolved',
-  summary: `Summary with ${NASTY}, "double quotes", 'single quotes' & ampersands, <img src=x onerror=alert(4)> and a stray </p> end tag.`,
+  summary: `Summary with ${NASTY}, "double quotes", 'single quotes' & ampersands,\n<img src=x onerror=alert(4)> and a stray </p> end tag.\n\nA second paragraph " onfocus="alert(7)`,
   ai_effort: 'medium',
   ratings: { work_left: 5, significance: 7 },
   progress: [
     {
       id: 'step-one',
       title: `${NASTY} & "step" one`,
-      description: `<style>body { display: none }</style> ' " & <a href="javascript:alert(5)">x</a>`,
+      description: `<style>body { display: none }</style>\n' " & <a href="javascript:alert(5)">x</a>`,
       status: 'done',
       by: [{ name: `${NASTY} Person`, kind: 'person', url: 'https://example.org/people?a=1&b=2' }],
       date: '2020-01-02',
@@ -46,6 +52,27 @@ const nastyProblem = {
   ],
   sample: true,
   updated: '2020-02-03',
+};
+
+// A valid problem with dates before 1000 CE, including a year BCE.
+const ancientProblem = {
+  id: 'ancient-dates-test',
+  name: 'Ancient Dates Test',
+  field: 'mathematics',
+  category: 'Geometry',
+  status: 'resolved',
+  summary: 'A made-up problem posed in 430 BCE, restated in 430 CE and shown impossible in 1882, with sources from 300 BCE on.',
+  ai_effort: 'low',
+  progress: [
+    { id: 'posed', title: 'Problem posed', status: 'done', by: [{ name: 'Ancient Placeholder', kind: 'person' }], date: '-0430' },
+    { id: 'restated', title: 'Problem restated', status: 'done', by: [{ name: 'Later Placeholder', kind: 'person' }], date: '0430-05-14' },
+    { id: 'settled', title: 'Shown impossible', status: 'done', by: [{ name: 'Modern Placeholder', kind: 'group' }], date: '1882' },
+  ],
+  sources: [
+    { title: 'An old book', url: 'https://example.org/old-book', kind: 'book', year: -300 },
+    { title: 'A newer book', url: 'https://example.org/newer-book', kind: 'book', authors: ['Ada Placeholder'], year: 430 },
+  ],
+  sample: true,
 };
 
 let tmp;
@@ -80,6 +107,20 @@ async function readOutput(dir) {
   for (const file of await listFiles(dir)) contents.set(file, await readFile(path.join(dir, file), 'utf8'));
   return contents;
 }
+
+// Writes a data folder, with the real schema and the given problems, in the test folder.
+async function makeDataDir(name, problems) {
+  const data = path.join(tmp, name);
+  await cp(path.join(DEFAULT_DATA_DIR, 'schema'), path.join(data, 'schema'), { recursive: true });
+  await mkdir(path.join(data, 'problems'));
+  for (const problem of problems) {
+    await writeFile(path.join(data, 'problems', `${problem.id}.json`), JSON.stringify(problem, null, 2));
+  }
+  return data;
+}
+
+// The page without its <head>: only what is shown.
+const bodyOf = (page) => page.slice(page.indexOf('<body>'));
 
 const ATTR = /\s([^\s"'<>/=]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'=<>`]+)))?/g;
 const TAG = /<([a-zA-Z][\w:-]*)((?:\s+[^\s"'<>/=]+(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^\s"'=<>`]+))?)*)\s*\/?>/g;
@@ -177,6 +218,26 @@ describe('formatting', () => {
     assert.equal(formatDate('not a date'), 'not a date');
   });
 
+  it('formats years BCE, and adds CE to years before 1000', () => {
+    assert.equal(formatDate('-0430'), '430 BCE');
+    assert.equal(formatDate('-0001'), '1 BCE');
+    assert.equal(formatDate('0430'), '430 CE');
+    assert.equal(formatDate('0430-05'), 'May 430 CE');
+    assert.equal(formatDate('0430-05-14'), '14 May 430 CE');
+    assert.equal(formatDate('0999'), '999 CE');
+    assert.equal(formatDate('1000'), '1000');
+    // Not valid dates: shown as written.
+    assert.equal(formatDate('0000'), '0000');
+    assert.equal(formatDate('-0430-05'), '-0430-05');
+  });
+
+  it('formats source years the same way', () => {
+    assert.equal(formatYear(-300), '300 BCE');
+    assert.equal(formatYear(430), '430 CE');
+    assert.equal(formatYear(2019), '2019');
+    assert.equal(formatYear(undefined), '');
+  });
+
   it('shortens long text at a word boundary', () => {
     const text = 'word '.repeat(100).trim();
     const short = truncate(text, 200);
@@ -216,6 +277,35 @@ describe('build from data/', () => {
       const json = JSON.parse(files.get(`problems/${problem.id}.json`));
       assert.deepEqual(json, problem);
     }
+  });
+
+  it('offers the sort options, and has a note for visitors without JavaScript', () => {
+    const index = files.get('index.html');
+    assert.match(index, /<option value="name"[^>]*>Name<\/option>/);
+    // The note comes first, in the controls' place: the first column on wide
+    // screens, above the list on narrow ones.
+    assert.match(index, /<div class="index-layout">\s*<noscript><p class="noscript-note">Search, sorting and filters need JavaScript\. Without it, all problems are listed A to Z\.<\/p><\/noscript>\s*<form id="controls"/);
+  });
+
+  it('gives the values on a card a fixed width, so the bars line up', () => {
+    const index = files.get('index.html');
+    const bars = index.match(/<span class="pips /g) ?? [];
+    const lined = index.match(/<dd><span class="card-value">[^<]+<\/span> <span class="pips /g) ?? [];
+    assert.ok(bars.length > 0);
+    assert.equal(lined.length, bars.length);
+  });
+
+  it('explains the licenses, AI effort and fields on the About page', () => {
+    const about = files.get('about/index.html');
+    for (const text of [
+      'Content, including the problem data and artwork such as STEMgu, is under',
+      'The problem data is under CC BY 4.0; the schema and vocabulary files are under MIT.',
+      'The recommended AI reasoning effort for working on the problem now: for the first open checkpoint on its map (one that is in progress, not started or disputed), or, if none is open, for checking and building on the recorded work.',
+    ]) {
+      assert.ok(about.includes(text), text);
+    }
+    const vocabulary = JSON.parse(files.get('schema/vocabulary.json'));
+    for (const field of Object.values(vocabulary.field)) assert.ok(about.includes(escapeHtml(field.description)), field.label);
   });
 
   it('writes problems.json with the license, the count and every problem', () => {
@@ -324,10 +414,7 @@ describe('build from hostile data', () => {
   let files;
 
   before(async () => {
-    const data = path.join(tmp, 'nasty-data');
-    await cp(path.join(DEFAULT_DATA_DIR, 'schema'), path.join(data, 'schema'), { recursive: true });
-    await mkdir(path.join(data, 'problems'));
-    await writeFile(path.join(data, 'problems', `${nastyProblem.id}.json`), JSON.stringify(nastyProblem, null, 2));
+    const data = await makeDataDir('nasty-data', [nastyProblem]);
     const out = path.join(tmp, 'nasty-out');
     const result = await build({ dataDir: data, outDir: out });
     assert.equal(result.problems, 1, 'the hostile problem must pass validation');
@@ -353,10 +440,61 @@ describe('build from hostile data', () => {
     }
   });
 
+  it('keeps line breaks in the summary and descriptions inside their paragraph', () => {
+    const page = files.get(`problems/${nastyProblem.id}/index.html`);
+    assert.ok(page.includes('<p class="summary-text">Summary with &lt;script&gt;'), 'summary');
+    assert.ok(page.includes('ampersands,\n&lt;img src=x onerror=alert(4)&gt; and a stray &lt;/p&gt; end tag.'), 'summary');
+    assert.ok(page.includes('A second paragraph &quot; onfocus=&quot;alert(7)</p>'), 'summary');
+    assert.ok(page.includes('&lt;/style&gt;\n&#39; &quot; &amp; &lt;a href=&quot;javascript:alert(5)&quot;&gt;x&lt;/a&gt;</p>'), 'description');
+    // The stylesheet shows those line breaks instead of running the paragraphs together.
+    assert.match(files.get('assets/styles.css'), /\.summary-text,\s*\.cp-description\s*\{\s*white-space: pre-line;/);
+  });
+
+  it('never lets a separator dot start a line', () => {
+    // Each " · " has a no-break space before the dot, so a line can break only after it.
+    for (const [file, content] of files) {
+      if (!file.endsWith('.html')) continue;
+      const body = bodyOf(content);
+      assert.ok(body.includes('&nbsp;· '), file);
+      assert.doesNotMatch(body, /[ \t\r\n]·/, file);
+    }
+    const page = files.get(`problems/${nastyProblem.id}/index.html`);
+    for (const list of ['class="problem-meta"', 'class="progress-summary"', 'class="cp-meta"', 'class="source-meta"']) {
+      assert.match(page, new RegExp(`${list}>[^\\n]*&nbsp;· `), list);
+    }
+  });
+
   it('keeps the raw values in the JSON files', () => {
     const json = JSON.parse(files.get(`problems/${nastyProblem.id}.json`));
     assert.deepEqual(json, nastyProblem);
     assert.deepEqual(JSON.parse(files.get('problems.json')).problems, [nastyProblem]);
+  });
+});
+
+describe('build with dates before 1000 CE', () => {
+  let page;
+
+  before(async () => {
+    const data = await makeDataDir('ancient-data', [ancientProblem]);
+    const out = path.join(tmp, 'ancient-out');
+    const result = await build({ dataDir: data, outDir: out });
+    assert.equal(result.problems, 1, 'the problem must pass validation');
+    page = await readFile(path.join(out, 'problems', ancientProblem.id, 'index.html'), 'utf8');
+  });
+
+  it('writes a year BCE as plain text, because HTML dates cannot hold one', () => {
+    assert.ok(page.includes('<span class="cp-when">Reached 430 BCE</span>'));
+    assert.ok(!page.includes('datetime="-'));
+  });
+
+  it('marks up the other dates, with CE added before the year 1000', () => {
+    assert.ok(page.includes('<span class="cp-when">Reached <time datetime="0430-05-14">14 May 430 CE</time></span>'));
+    assert.ok(page.includes('<span class="cp-when">Reached <time datetime="1882">1882</time></span>'));
+  });
+
+  it('shows source years BCE and CE', () => {
+    assert.ok(page.includes('<span class="source-meta">&nbsp;· 300 BCE</span>'));
+    assert.ok(page.includes('<span class="source-meta">&nbsp;· Ada Placeholder&nbsp;· 430 CE</span>'));
   });
 });
 
@@ -402,22 +540,27 @@ describe('output folder safety', () => {
 });
 
 describe('preview server', () => {
+  let out;
   let server;
   let port;
 
   before(async () => {
-    const out = path.join(tmp, 'serve');
+    out = path.join(tmp, 'serve');
     await build({ outDir: out });
     server = createServer({ root: out });
     await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
     port = server.address().port;
   });
 
-  after(() => new Promise((resolve) => server.close(resolve)));
+  // Also closes connections left open, so a broken response can't keep the tests running.
+  after(() => new Promise((resolve) => {
+    server.close(resolve);
+    server.closeAllConnections();
+  }));
 
-  // Sends the path exactly as given, without normalising it.
-  const get = (rawPath) => new Promise((resolve, reject) => {
-    const req = http.request({ host: '127.0.0.1', port, path: rawPath, method: 'GET' }, (res) => {
+  // Sends the path exactly as given, without normalizing it.
+  const get = (rawPath, method = 'GET') => new Promise((resolve, reject) => {
+    const req = http.request({ host: '127.0.0.1', port, path: rawPath, method }, (res) => {
       let body = '';
       res.setEncoding('utf8');
       res.on('data', (chunk) => { body += chunk; });
@@ -457,5 +600,85 @@ describe('preview server', () => {
       assert.ok(!res.body.includes('"name": "stemularity"') && !res.body.includes('BUILD_MARKER'), attempt);
     }
     assert.equal((await get('/a%00b')).status, 400);
+  });
+
+  it('answers HEAD with the headers only', async () => {
+    const res = await get('/', 'HEAD');
+    assert.equal(res.status, 200);
+    assert.equal(Number(res.headers['content-length']), (await readFile(path.join(out, 'index.html'))).length);
+    assert.equal(res.body, '');
+  });
+
+  // A rebuild while the server runs deletes and rewrites files. These tests
+  // change a file at the worst moment: just after the server's stat() has
+  // seen it, before the server reads it. The server's stat() is swapped for
+  // one that does this, through Node's live bindings for built-in modules.
+  async function changeAfterStat(file, change, request) {
+    const realStat = fsPromises.stat;
+    fsPromises.stat = async (target, ...rest) => {
+      const info = await realStat(target, ...rest);
+      if (target === file) await change();
+      return info;
+    };
+    syncBuiltinESMExports();
+    try {
+      return await request();
+    } finally {
+      fsPromises.stat = realStat;
+      syncBuiltinESMExports();
+    }
+  }
+
+  it('answers 404, and keeps running, when a file disappears while it is served', { timeout: 10_000 }, async () => {
+    const file = path.join(out, 'vanishing.html');
+    await writeFile(file, '<p>Soon gone</p>');
+    const res = await changeAfterStat(file, () => rm(file), () => get('/vanishing.html'));
+    assert.equal(res.status, 404);
+    assert.match(res.body, /Page not found/);
+    assert.equal((await get('/')).status, 200, 'the server still answers');
+  });
+
+  it('answers 500, and keeps running, when a file cannot be read', { timeout: 10_000 }, async () => {
+    const file = path.join(out, 'unreadable.html');
+    await writeFile(file, '<p>Soon a folder</p>');
+    const swap = async () => {
+      await rm(file);
+      await mkdir(file);
+    };
+    const res = await changeAfterStat(file, swap, () => get('/unreadable.html'));
+    assert.equal(res.status, 500);
+    assert.match(res.body, /^Internal error: /);
+    assert.equal((await get('/')).status, 200, 'the server still answers');
+  });
+});
+
+describe('the build command', () => {
+  /** Runs site/build.mjs from the repository root. */
+  const run = (args) => spawnSync(process.execPath, ['site/build.mjs', ...args], { cwd: ROOT, encoding: 'utf8', env: CHILD_ENV });
+
+  it('prints every error on one line, even when the data holds line breaks', async () => {
+    const forged = '\n::error file=README.md::forged';
+    // An unknown property: the error message repeats its name.
+    const problem = { ...nastyProblem, [`note${forged}\u001b[2J\t`]: 'x', 'old ##[error]form': 'x' };
+    const data = await makeDataDir('forged-data', [problem]);
+    // A file name can hold a line break too, except on Windows.
+    const forgedFile = await writeFile(path.join(data, 'problems', `copy${forged}.pdf`), 'not really a PDF').then(
+      () => true,
+      () => false,
+    );
+    const out = path.join(tmp, 'forged-out');
+    const { status, stdout, stderr } = run(['--data', data, '--out', out]);
+    assert.equal(status, 1);
+    // GitHub reads a command from any line that starts with "::", after leading spaces.
+    for (const line of `${stdout}\n${stderr}`.split(/\r\n|\r|\n/)) {
+      assert.ok(!line.trimStart().startsWith('::'), `a line of output was forged:\n${line}`);
+    }
+    // The runner's older "##[command]" form, which it reads anywhere in a line, is broken up.
+    assert.ok(!`${stdout}\n${stderr}`.includes('##['), stderr);
+    assert.ok(stderr.includes('unknown property "old ##\\[error]form"'), stderr);
+    // The text is still shown, with the control characters escaped.
+    assert.ok(stderr.includes('(top level): unknown property "note\\n::error file=README.md::forged\\u001b[2J\\t"'), stderr);
+    if (forgedFile) assert.ok(stderr.includes('copy\\n::error file=README.md::forged.pdf  '), stderr);
+    assert.equal(existsSync(out), false, 'nothing was built');
   });
 });

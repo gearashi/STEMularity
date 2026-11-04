@@ -4,7 +4,13 @@
 // without JavaScript. This script only reorders and hides those cards, using
 // the data-* attributes on each card. It fetches nothing. The current view is
 // kept in the address (?q=&sort=&dir=&status=&field=, defaults left out), so
-// it survives a reload and can be shared.
+// it survives a reload and can be shared. On Back and Forward, the view
+// follows the address.
+//
+// Search keeps a card when every word of the query is in the card's text, in
+// any order. Hyphens count as spaces, so "room-temperature" and "room
+// temperature" find the same problems, and tag links such as
+// ?q=protein-folding work.
 
 (() => {
   'use strict';
@@ -39,6 +45,8 @@
   }]));
   const DEFAULT_SORT = sortSelect.options[0].value;
 
+  const foldHyphens = (text) => text.replace(/-/g, ' ');
+
   const toNumber = (value) => {
     if (value === undefined || value === '') return null;
     const n = Number(value);
@@ -52,7 +60,7 @@
     category: li.dataset.category || '',
     field: li.dataset.field || '',
     status: li.dataset.status || '',
-    search: li.dataset.search || '',
+    search: foldHyphens(li.dataset.search || ''),
     effort: toNumber(li.dataset.effort),
     'work-left': toNumber(li.dataset.workLeft),
     significance: toNumber(li.dataset.significance),
@@ -94,13 +102,13 @@
   }
 
   function render() {
-    const query = normalize(state.q);
+    const words = normalize(foldHyphens(state.q)).split(' ').filter(Boolean);
     const sorted = items.slice().sort(compare);
     let shown = 0;
     for (const item of sorted) {
       const visible = state.status.has(item.status)
         && state.field.has(item.field)
-        && (!query || item.search.includes(query));
+        && words.every((word) => item.search.includes(word));
       item.li.hidden = !visible;
       if (visible) shown += 1;
     }
@@ -208,19 +216,32 @@
   }
   resetButton.addEventListener('click', reset);
   if (emptyReset) {
+    // Clears the search and filters only: the chosen sort stays.
     emptyReset.addEventListener('click', () => {
-      reset();
+      state = { ...defaults(), sort: state.sort, dir: state.dir };
+      showState();
+      update();
       search.focus();
     });
   }
+
+  // Back and Forward (and links within the page, such as the skip link) can
+  // change the address without reloading: show the view it describes.
+  window.addEventListener('popstate', () => {
+    state = readUrl();
+    showState();
+    render();
+  });
 
   state = readUrl();
   showState();
   render();
 
-  // On small screens the filters start folded away, unless some are in use.
+  // The filters start folded, so on small screens nothing below them moves.
+  // Open them on wide screens, where they sit beside the list, or when some
+  // are in use.
   const filtersInUse = Object.keys(boxes).some((group) => state[group].size !== boxes[group].length);
-  if (filters && !filtersInUse && window.matchMedia('(max-width: 59.99rem)').matches) filters.open = false;
+  if (filters && (filtersInUse || window.matchMedia('(min-width: 60rem)').matches)) filters.open = true;
 
-  form.hidden = false;
+  form.classList.add('is-ready');
 })();

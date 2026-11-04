@@ -6,21 +6,44 @@ const MONTHS = [
   'January', 'February', 'March', 'April', 'May', 'June',
   'July', 'August', 'September', 'October', 'November', 'December',
 ];
-const DATE = /^(\d{4})(?:-(\d{2})(?:-(\d{2}))?)?$/;
+// The data's date shapes: -YYYY (a year BCE, year only), or YYYY, YYYY-MM or
+// YYYY-MM-DD (CE). Captures the BCE year, or the CE year, month and day.
+const DATE = /^(?:-(\d{4})|(\d{4})(?:-(\d{2})(?:-(\d{2}))?)?)$/;
 
 /**
- * Formats a YYYY, YYYY-MM or YYYY-MM-DD date as "2019", "March 2019" or
- * "14 August 2023". Anything else is returned unchanged, as text.
+ * Formats a year given as an integer: 2019 as "2019", 430 as "430 CE" and
+ * -300 as "300 BCE". Years before 1000 get "CE", so they don't read as plain
+ * numbers. Anything else (including 0, which is not a year) is returned as text.
+ */
+export function formatYear(year) {
+  if (year === null || year === undefined) return '';
+  if (!Number.isInteger(year) || year === 0) return String(year);
+  if (year < 0) return `${-year} BCE`;
+  return year < 1000 ? `${year} CE` : String(year);
+}
+
+/**
+ * Formats a date from the data: "2019", "March 2019", "14 August 2023",
+ * "14 May 430 CE" or "430 BCE" (from -0430). Anything else, such as year
+ * 0000, is returned unchanged, as text.
  */
 export function formatDate(value) {
   const text = value === null || value === undefined ? '' : String(value);
   const match = DATE.exec(text);
   if (!match) return text;
-  const [, year, month, day] = match;
+  const [, bceYear, ceYear, month, day] = match;
+  if (Number(bceYear ?? ceYear) === 0) return text; // there is no year 0
+  if (bceYear !== undefined) return formatYear(-Number(bceYear));
+  const year = formatYear(Number(ceYear));
   if (!month) return year;
   const monthName = MONTHS[Number(month) - 1];
   if (!monthName) return text;
   return day ? `${Number(day)} ${monthName} ${year}` : `${monthName} ${year}`;
+}
+
+/** true for a date from the data that is a year BCE, such as "-0430". */
+export function isBceDate(value) {
+  return typeof value === 'string' && value.startsWith('-');
 }
 
 /**

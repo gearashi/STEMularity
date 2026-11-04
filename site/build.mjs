@@ -30,6 +30,18 @@ const USAGE = `Usage: node site/build.mjs [--data <dir>] [--out <dir>]
   --data <dir>  folder that holds schema/ and problems/ (default: data)
   --out <dir>   output folder, replaced on every build (default: site/dist)`;
 
+// File names and messages can hold text from the data. Control characters and
+// Unicode line separators in them are printed as escapes (\n, \r, \t or
+// \uXXXX), the same way as in scripts/validate.mjs, so every printed line stays
+// one line: data can never start a line of its own, such as a forged GitHub
+// Actions command.
+const NAMED_ESCAPES = { '\n': '\\n', '\r': '\\r', '\t': '\\t' };
+const oneLine = (text) =>
+  String(text)
+    .replace(/[\u0000-\u001f\u007f-\u009f\u2028\u2029]/g, (ch) => NAMED_ESCAPES[ch] ?? `\\u${ch.charCodeAt(0).toString(16).padStart(4, '0')}`)
+    // The Actions runner also reads its older "##[command]" form anywhere in a line.
+    .replace(/##\[/g, '##\\[');
+
 /** The data has errors, so nothing was built. */
 export class BuildError extends Error {
   constructor(message, { errors = [], warnings = [] } = {}) {
@@ -186,7 +198,7 @@ async function main(args) {
       },
     }));
   } catch (err) {
-    console.error(`${err.message}\n\n${USAGE}`);
+    console.error(`${oneLine(err.message)}\n\n${USAGE}`);
     return 1;
   }
   if (values.help) {
@@ -199,17 +211,17 @@ async function main(args) {
       dataDir: values.data ? path.resolve(values.data) : DEFAULT_DATA_DIR,
       outDir: values.out ? path.resolve(values.out) : DEFAULT_OUT_DIR,
     });
-    for (const { file, message } of result.warnings) console.warn(`warning  ${file}  ${message}`);
-    console.log(`Built ${result.problems} problem page(s), ${result.files.length} files in ${display(result.outDir)}.`);
+    for (const { file, message } of result.warnings) console.warn(`warning  ${oneLine(file)}  ${oneLine(message)}`);
+    console.log(`Built ${result.problems} problem page(s), ${result.files.length} files in ${oneLine(display(result.outDir))}.`);
     return 0;
   } catch (err) {
     if (!(err instanceof BuildError)) {
-      console.error(`error    ${err.message}`);
+      console.error(`error    ${oneLine(err.message)}`);
       return 1;
     }
-    for (const { file, message } of err.warnings) console.warn(`warning  ${file}  ${message}`);
-    for (const { file, message } of err.errors) console.error(`error    ${file}  ${message}`);
-    console.error(`\n${err.message}`);
+    for (const { file, message } of err.warnings) console.warn(`warning  ${oneLine(file)}  ${oneLine(message)}`);
+    for (const { file, message } of err.errors) console.error(`error    ${oneLine(file)}  ${oneLine(message)}`);
+    console.error(`\n${oneLine(err.message)}`);
     return 1;
   }
 }

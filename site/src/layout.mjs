@@ -8,6 +8,9 @@
 //
 // The Content Security Policy in _headers allows no inline scripts or styles,
 // so pages never use <style>, style="", inline <script> or on* attributes.
+//
+// The footer's dot separator has a no-break space before it, so the dot never
+// starts a line.
 
 import { html } from './html.mjs';
 import { CC_BY_URL, REPO_URL, SITE_NAME, repoFileUrl } from './config.mjs';
@@ -62,7 +65,7 @@ ${main}
 </main>
 <footer class="site-footer">
   <div class="wrap">
-    <p>Code: <a href="${repoFileUrl('LICENSE')}" rel="noopener noreferrer">MIT</a> · Content: <a href="${CC_BY_URL}" rel="noopener noreferrer">CC BY 4.0</a></p>
+    <p>Code: <a href="${repoFileUrl('LICENSE')}" rel="noopener noreferrer">MIT</a>&nbsp;· Content: <a href="${CC_BY_URL}" rel="noopener noreferrer">CC BY 4.0</a></p>
     <p>License files on GitHub: <a href="${repoFileUrl('LICENSE')}" rel="noopener noreferrer">LICENSE</a> (code) and <a href="${repoFileUrl('LICENSE-CONTENT')}" rel="noopener noreferrer">LICENSE-CONTENT</a> (content). <a href="${about}#pledge">Our open-knowledge pledge</a>.</p>
   </div>
 </footer>
