@@ -107,8 +107,14 @@
         "required": ["status"],
         "properties": { "status": { "enum": ["open", "unsolved"] } }
       },
-      "then": { "required": ["ratings"] },
-      "else": { "properties": { "ratings": false } }
+      "then": { "required": ["ratings"] }
+    },
+    {
+      "if": {
+        "required": ["status"],
+        "properties": { "status": { "enum": ["solved", "resolved"] } }
+      },
+      "then": { "properties": { "ratings": false } }
     }
   ],
   "$defs": {
@@ -118,10 +124,10 @@
       "pattern": "^[0-9]{4}(-(0[1-9]|1[0-2])(-(0[1-9]|[12][0-9]|3[01]))?)?$"
     },
     "url": {
-      "description": "Absolute http(s) URL.",
+      "description": "Absolute http(s) URL with a host name.",
       "type": "string",
       "format": "uri",
-      "pattern": "^https?://",
+      "pattern": "^https?://[^\\s/?#]+",
       "maxLength": 2000
     },
     "link": {

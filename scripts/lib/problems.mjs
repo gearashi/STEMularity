@@ -13,7 +13,7 @@ export const DEFAULT_DATA_DIR = path.join(ROOT, 'data');
 
 // Files allowed anywhere under data/. Sources are linked, never copied in.
 const ALLOWED_EXTENSIONS = new Set(['.json', '.md']);
-const ALLOWED_NAMES = new Set(['.gitkeep']);
+const ALLOWED_NAMES = new Set(['.gitkeep', '.DS_Store']); // .DS_Store is macOS Finder litter, ignored by git
 
 // Where each vocabulary.json section's values live in the schema.
 const VOCABULARY_ENUMS = {
@@ -27,6 +27,10 @@ const VOCABULARY_ENUMS = {
 };
 
 const DATE_SHAPE = /^(\d{4})(?:-(\d{2})(?:-(\d{2}))?)?$/;
+const DAYS_IN_MONTH = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+const DAY_MS = 24 * 60 * 60 * 1000;
+// The schema's pattern for ids and tags.
+const KEBAB_CASE = '^[a-z0-9]+(-[a-z0-9]+)*$';
 
 /**
  * Reads every data/problems/*.json file and checks it against the schema and
@@ -34,18 +38,20 @@ const DATE_SHAPE = /^(\d{4})(?:-(\d{2})(?:-(\d{2}))?)?$/;
  *
  * @param {object} [options]
  * @param {string} [options.dataDir] Directory holding schema/ and problems/.
- * @param {string} [options.latestDate] Latest date allowed, as YYYY-MM-DD.
- *   Defaults to tomorrow (UTC), so contributors ahead of UTC are not rejected.
+ * @param {string|Date} [options.latestDate] Latest date allowed, as YYYY-MM-DD
+ *   (a Date is read in UTC). Defaults to tomorrow (UTC), so contributors ahead
+ *   of UTC are not rejected.
  * @returns {Promise<{problems: object[], vocabulary: object, schema: object,
  *   errors: {file: string, message: string}[], warnings: {file: string, message: string}[]}>}
  *   problems holds only entries that passed every check, sorted by name.
  */
 export async function loadProblems({ dataDir = DEFAULT_DATA_DIR, latestDate } = {}) {
+  const latest = resolveLatestDate(latestDate);
   const errors = [];
   const warnings = [];
   const rel = (file) => {
     const relative = path.relative(ROOT, file);
-    if (!relative || relative.startsWith('..') || path.isAbsolute(relative)) return file;
+    if (!relative || relative === '..' || relative.startsWith(`..${path.sep}`) || path.isAbsolute(relative)) return file;
     return relative.split(path.sep).join('/');
   };
   const error = (file, message) => errors.push({ file: rel(file), message });
@@ -77,23 +83,29 @@ export async function loadProblems({ dataDir = DEFAULT_DATA_DIR, latestDate } = 
   }
 
   const problemsDir = path.join(dataDir, 'problems');
-  let entries = [];
+  let entries;
   try {
     entries = await readdir(problemsDir, { withFileTypes: true });
   } catch (err) {
     error(problemsDir, `cannot read the problems folder: ${err.message}`);
   }
 
-  const latest = latestDate ?? isoDate(new Date(Date.now() + 24 * 60 * 60 * 1000));
   const problems = [];
   const idsLower = new Map();
-  for (const entry of entries.sort((a, b) => a.name.localeCompare(b.name))) {
+  let problemFiles = 0;
+  for (const entry of (entries ?? []).sort((a, b) => a.name.localeCompare(b.name))) {
     const file = path.join(problemsDir, entry.name);
     if (entry.isDirectory()) {
       error(file, 'data/problems/ must be flat: one <id>.json file per problem, no subfolders.');
       continue;
     }
-    if (!entry.name.endsWith('.json')) continue;
+    const extension = path.extname(entry.name);
+    if (extension.toLowerCase() !== '.json') continue; // Markdown notes and .gitkeep are not problems
+    problemFiles += 1;
+    if (extension !== '.json') {
+      error(file, `problem files must end in ".json", in lowercase. Rename it to "${path.basename(entry.name, extension)}.json".`);
+      continue;
+    }
 
     const problem = await readJson(file, error);
     if (problem === undefined) continue;
@@ -127,10 +139,20 @@ export async function loadProblems({ dataDir = DEFAULT_DATA_DIR, latestDate } = 
     }
     byName.set(key, problem.id);
   }
-  if (entries.length === 0) warn(problemsDir, 'no problems found.');
+  // A folder that cannot be read is already an error.
+  if (entries && problemFiles === 0) warn(problemsDir, 'no problems found.');
 
   problems.sort((a, b) => a.name.localeCompare(b.name, 'en', { sensitivity: 'base' }) || a.id.localeCompare(b.id));
   return { problems, vocabulary, schema, errors, warnings };
+}
+
+// Returns the latest allowed date as YYYY-MM-DD, or throws on a value that
+// is not a date: that is a bug in the caller, not in the data.
+function resolveLatestDate(latestDate) {
+  if (latestDate === undefined || latestDate === null) return isoDate(new Date(Date.now() + DAY_MS));
+  if (latestDate instanceof Date && !Number.isNaN(latestDate.getTime())) return isoDate(latestDate);
+  if (typeof latestDate === 'string' && /^\d{4}-\d{2}-\d{2}/.test(latestDate)) return latestDate.slice(0, 10);
+  throw new TypeError(`latestDate must be a date as YYYY-MM-DD, got ${JSON.stringify(latestDate)}.`);
 }
 
 async function readJson(file, error) {
@@ -142,7 +164,7 @@ async function readJson(file, error) {
     return undefined;
   }
   try {
-    return JSON.parse(text.replace(/^﻿/, ''));
+    return JSON.parse(text.replace(/^\uFEFF/, '')); // ignore a byte order mark
   } catch (err) {
     error(file, `invalid JSON: ${err.message}`);
     return undefined;
@@ -185,7 +207,7 @@ function checkVocabulary(schema, vocabulary, error) {
       }
     }
   }
-  const ranks = Object.values(vocabulary.ai_effort ?? {}).map((entry) => entry.rank);
+  const ranks = Object.values(vocabulary.ai_effort ?? {}).map((entry) => entry?.rank);
   if (ranks.some((rank) => !Number.isInteger(rank)) || new Set(ranks).size !== ranks.length) {
     error('every "ai_effort" entry needs a unique integer "rank".');
   }
@@ -194,7 +216,7 @@ function checkVocabulary(schema, vocabulary, error) {
 // Turns Ajv's errors into one readable line each.
 export function formatAjvErrors(ajvErrors = []) {
   const messages = [];
-  for (const err of ajvErrors) {
+  for (const err of ajvErrors ?? []) {
     if (err.keyword === 'if') continue; // always accompanied by the specific failure
     const where = err.instancePath || '(top level)';
     let message;
@@ -209,17 +231,18 @@ export function formatAjvErrors(ajvErrors = []) {
         message = `${where}: must be one of ${err.params.allowedValues.map((v) => JSON.stringify(v)).join(', ')}`;
         break;
       case 'false schema':
-        message = err.instancePath.endsWith('/ratings')
-          ? `${where}: ratings are only allowed when status is "open" or "unsolved"`
-          : `${where}: not allowed on a "not-started" checkpoint`;
+        if (err.instancePath === '/ratings') message = `${where}: ratings are only allowed when status is "open" or "unsolved"`;
+        else if (/^\/progress\/\d+\/(by|date)$/.test(err.instancePath)) message = `${where}: not allowed on a "not-started" checkpoint`;
+        else message = `${where}: not allowed here`;
         break;
       case 'pattern':
         if (err.schemaPath.startsWith('#/$defs/date/')) message = `${where}: must be a date as YYYY, YYYY-MM or YYYY-MM-DD`;
-        else if (err.schemaPath.startsWith('#/$defs/url/')) message = `${where}: must start with http:// or https://`;
-        else message = `${where}: must be lowercase words joined by hyphens, like "my-problem-name"`;
+        else if (err.schemaPath.startsWith('#/$defs/url/')) message = `${where}: must be a full http:// or https:// address with a host name`;
+        else if (err.params.pattern === KEBAB_CASE) message = `${where}: must be lowercase words joined by hyphens, like "my-problem-name"`;
+        else message = `${where}: ${err.message}`;
         break;
       case 'format':
-        message = `${where}: must be an absolute URL`;
+        message = err.params.format === 'uri' ? `${where}: must be an absolute URL` : `${where}: ${err.message}`;
         break;
       default:
         message = `${where}: ${err.message}`;
@@ -233,6 +256,11 @@ function isoDate(date) {
   return date.toISOString().slice(0, 10);
 }
 
+function daysInMonth(year, month) {
+  const leap = (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
+  return month === 2 && leap ? 29 : DAYS_IN_MONTH[month - 1];
+}
+
 function checkDates(problem, latestDate, error) {
   const dates = [];
   if (problem.updated) dates.push(['/updated', problem.updated]);
@@ -240,14 +268,12 @@ function checkDates(problem, latestDate, error) {
     if (checkpoint.date) dates.push([`/progress/${i}/date`, checkpoint.date]);
   });
   for (const [where, value] of dates) {
-    const [, y, m, d] = value.match(DATE_SHAPE);
-    if (d) {
-      const date = new Date(Date.UTC(Number(y), Number(m) - 1, Number(d)));
-      if (date.getUTCMonth() !== Number(m) - 1) {
-        error(`${where}: "${value}" is not a real calendar date`);
-        continue;
-      }
+    const [, year, month, day] = value.match(DATE_SHAPE);
+    if (day && Number(day) > daysInMonth(Number(year), Number(month))) {
+      error(`${where}: "${value}" is not a real calendar date`);
+      continue;
     }
+    // A partial date is compared at its own precision: "2026" is not after "2026-06-30".
     if (value > latestDate.slice(0, value.length)) error(`${where}: "${value}" is in the future`);
   }
 }

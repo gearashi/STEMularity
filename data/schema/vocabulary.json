@@ -33,7 +33,7 @@
     "low": {
       "label": "Low",
       "rank": 1,
-      "description": "A quick AI session is enough: summarising known results, checking sources or tidying the progress map."
+      "description": "A quick AI session is enough: summarizing known results, checking sources or tidying the progress map."
     },
     "medium": {
       "label": "Medium",
