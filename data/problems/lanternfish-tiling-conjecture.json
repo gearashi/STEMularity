@@ -1,0 +1,85 @@
+{
+  "$schema": "../schema/problem.schema.json",
+  "id": "lanternfish-tiling-conjecture",
+  "name": "Lanternfish Tiling Conjecture",
+  "aliases": ["LTC", "The glowing-tile question"],
+  "field": "mathematics",
+  "category": "Combinatorics",
+  "tags": ["tilings", "aperiodic-order", "sample-data"],
+  "status": "unsolved",
+  "summary": "Made-up sample problem. A lanternfish tile is a fictional seven-sided shape with one curved edge. The conjecture says that lanternfish tiles can cover the infinite plane, with no gaps or overlaps, only in patterns that never repeat. Small patches have been checked by computer and a promising proof strategy exists, but no complete proof or counterexample has been accepted.",
+  "ai_effort": "high",
+  "ratings": {
+    "work_left": 6,
+    "significance": 3
+  },
+  "progress": [
+    {
+      "id": "problem-posed",
+      "title": "Problem posed and the tile defined precisely",
+      "description": "The tile's angles and edge lengths were fixed, and the question was stated in its current form.",
+      "status": "done",
+      "by": [{ "name": "Ada Placeholder", "kind": "person" }],
+      "date": "2019-03",
+      "links": [{ "title": "Original problem statement (sample link)", "url": "https://example.org/lanternfish/statement" }]
+    },
+    {
+      "id": "patch-search",
+      "title": "Computer search finds no repeating patch up to 10,000 tiles",
+      "description": "An exhaustive search found no periodic patch of up to 10,000 tiles, which is evidence for the conjecture but not a proof.",
+      "status": "done",
+      "by": [
+        { "name": "Sample Tiling Collective", "kind": "group" },
+        { "name": "Example Research Agent", "kind": "ai" }
+      ],
+      "date": "2023-08-14",
+      "links": [
+        { "title": "Search code (sample link)", "url": "https://example.org/lanternfish/search-code" },
+        { "title": "Search results dataset (sample link)", "url": "https://example.org/lanternfish/results" }
+      ]
+    },
+    {
+      "id": "substitution-attempt",
+      "title": "Substitution-rule proof attempt",
+      "description": "A proof using a simple inflation rule failed because the curved edge cannot be split evenly. Do not retry this route without a new way to handle the curved edge.",
+      "status": "dead-end",
+      "by": [{ "name": "Bo Exampleton", "kind": "person" }],
+      "date": "2024-02",
+      "links": [{ "title": "Write-up of the failed attempt (sample link)", "url": "https://example.org/lanternfish/substitution-notes" }]
+    },
+    {
+      "id": "marking-argument",
+      "title": "Edge-marking argument rules out every periodic tiling",
+      "description": "A new marking of the curved edge may force aperiodicity. The draft is being checked line by line.",
+      "status": "in-progress",
+      "by": [
+        { "name": "Ada Placeholder", "kind": "person" },
+        { "name": "Example Proof Assistant", "kind": "ai" }
+      ],
+      "date": "2025-06"
+    },
+    {
+      "id": "formal-proof",
+      "title": "Machine-checked formal proof",
+      "description": "Formalise the complete argument in a proof assistant so the result does not rest on a hand check.",
+      "status": "not-started"
+    }
+  ],
+  "sources": [
+    {
+      "title": "On seven-sided tiles with one curved edge (sample source)",
+      "url": "https://example.org/papers/lanternfish-tiles",
+      "kind": "paper",
+      "authors": ["Ada Placeholder"],
+      "year": 2019
+    },
+    {
+      "title": "Lanternfish tiling search data (sample source)",
+      "url": "https://example.org/datasets/lanternfish-search",
+      "kind": "dataset",
+      "year": 2023
+    }
+  ],
+  "sample": true,
+  "updated": "2026-10-01"
+}

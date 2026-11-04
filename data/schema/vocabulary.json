@@ -1,0 +1,106 @@
+{
+  "$comment": "Labels and explanations for every enum value in problem.schema.json. The validator checks that the two files list the same values, so update both together. Shared by the site, and later the extension and app.",
+  "status": {
+    "open": {
+      "label": "Open",
+      "description": "Not settled, and open-ended: there is no single agreed statement of what \"solved\" means yet, so progress is measured in milestones (for example a technology goal or a phenomenon awaiting an explanation)."
+    },
+    "unsolved": {
+      "label": "Unsolved",
+      "description": "Precisely stated, with a definite answer that nobody has found yet (for example a conjecture with no accepted proof or disproof)."
+    },
+    "solved": {
+      "label": "Solved",
+      "description": "Answered as posed: a proof, disproof, construction, algorithm or measurement has been found and accepted."
+    },
+    "resolved": {
+      "label": "Resolved",
+      "description": "Closed without an answer as posed: shown impossible, independent of the usual axioms, ill-posed, or superseded by later understanding."
+    }
+  },
+  "field": {
+    "mathematics": { "label": "Mathematics" },
+    "computer-science": { "label": "Computer science" },
+    "physics": { "label": "Physics" },
+    "astronomy": { "label": "Astronomy" },
+    "chemistry": { "label": "Chemistry" },
+    "biology": { "label": "Biology" },
+    "medicine": { "label": "Medicine" },
+    "earth-science": { "label": "Earth science" },
+    "engineering": { "label": "Engineering" }
+  },
+  "ai_effort": {
+    "low": {
+      "label": "Low",
+      "rank": 1,
+      "description": "A quick AI session is enough: summarising known results, checking sources or tidying the progress map."
+    },
+    "medium": {
+      "label": "Medium",
+      "rank": 2,
+      "description": "Standard reasoning: working through known arguments, reproducing a calculation or drafting a checkpoint write-up."
+    },
+    "high": {
+      "label": "High",
+      "rank": 3,
+      "description": "Extended reasoning: long derivations, careful proof or code checking, and comparing many sources."
+    },
+    "max": {
+      "label": "Max",
+      "rank": 4,
+      "description": "Frontier work: the deepest reasoning settings, long multi-agent research runs, and expert human review of every claim."
+    }
+  },
+  "ratings": {
+    "work_left": {
+      "label": "Work left",
+      "description": "How much work is left before the problem is fully solved.",
+      "low": "Almost there",
+      "high": "Barely begun"
+    },
+    "significance": {
+      "label": "Significance",
+      "description": "Real-world significance if the problem is fully solved.",
+      "low": "Mostly curiosity value",
+      "high": "Would change everyday life or technology"
+    }
+  },
+  "checkpoint_status": {
+    "done": {
+      "label": "Done",
+      "description": "Reached and accepted. Build on it instead of redoing it."
+    },
+    "in-progress": {
+      "label": "In progress",
+      "description": "Someone is working on this now. Check with them before starting the same work."
+    },
+    "not-started": {
+      "label": "Not started",
+      "description": "A known next step that nobody has taken yet."
+    },
+    "disputed": {
+      "label": "Disputed",
+      "description": "Claimed, but not yet accepted, or contested by others."
+    },
+    "dead-end": {
+      "label": "Dead end",
+      "description": "Tried and did not work. Recorded so nobody repeats it without a new idea."
+    }
+  },
+  "contributor_kind": {
+    "person": { "label": "Person" },
+    "group": { "label": "Group" },
+    "ai": { "label": "AI" }
+  },
+  "source_kind": {
+    "paper": { "label": "Paper" },
+    "preprint": { "label": "Preprint" },
+    "book": { "label": "Book" },
+    "article": { "label": "Article" },
+    "website": { "label": "Website" },
+    "dataset": { "label": "Dataset" },
+    "code": { "label": "Code" },
+    "video": { "label": "Video" },
+    "other": { "label": "Other" }
+  }
+}
