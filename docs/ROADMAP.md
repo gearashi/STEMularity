@@ -7,7 +7,7 @@ Ideas and comments are welcome. Open an issue or a pull request.
 ## Done so far
 
 - The repository layout, the README, the [Open-Knowledge Pledge](../README.md#the-open-knowledge-pledge), and the licenses: MIT for code and CC BY 4.0 for content.
-- The data format: a JSON Schema, a vocabulary of labels, and one file per problem. See [DATA_FORMAT.md](DATA_FORMAT.md).
+- The data format: a JSON Schema, a vocabulary with labels and definitions for every allowed value, and one file per problem. See [DATA_FORMAT.md](DATA_FORMAT.md).
 - A validator, tests, and a GitHub Action that runs them on every pull request.
 - 8 made-up sample problems.
 - A static website starter in [`site/`](../site/): a sortable, filterable list of problems, a page for each problem with its progress map, and a `problems.json` export. It is not deployed yet. See [DEPLOYING.md](DEPLOYING.md).
@@ -50,7 +50,7 @@ Ideas and comments are welcome. Open an issue or a pull request.
 
 **Open questions:**
 
-- Where are files stored? The repository allows only JSON and Markdown under `data/`.
+- Where are files stored? The repository allows only `.json` and `.md` files under `data/`.
 - Who reviews uploads, and what counts as verified?
 - What size limits and file formats make sense?
 - How do we keep personal details out of shared AI transcripts?
@@ -115,7 +115,7 @@ Ideas and comments are welcome. Open an issue or a pull request.
 
 - A desktop app, an installable web app, or both?
 - How big will the index get, and how do updates download?
-- Who makes the pixel art? It must be original work, licensed under CC BY 4.0 like other content.
+- Who makes the pixel art? It must be original work. Artwork is content, licensed under CC BY 4.0 wherever it is stored, but code that draws images is code, under MIT (see the [license table](../README.md#license)).
 - How do we keep the retro look accessible?
 
 ## Also later

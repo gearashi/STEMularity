@@ -14,7 +14,9 @@ All problems here are made-up samples for now. Each one is marked `"sample": tru
 
 Sources are links. Never commit copies of papers, PDFs, images, datasets or other files here.
 
-Only `.json` and `.md` files are allowed anywhere under `data/`. The validator reports anything else as an error. The only exceptions are files named `.gitkeep` and `.DS_Store` (macOS Finder creates these; git ignores them).
+Only files whose names end in `.json` or `.md` are allowed anywhere under `data/`. The validator reports any other file as an error. It checks names, not contents, so reviewers still check that nothing is copied in.
+
+The only exceptions are `.gitkeep`, `.DS_Store`, `Thumbs.db` and `desktop.ini` (the last two in any letter case), names that start with `._` or `.#`, Emacs auto-save files such as `#x.json#`, names that end in `~`, and Vim swap files (hidden files whose names end in `.swa` to `.swp`, such as `.x.json.swp`). The validator ignores these files. (`.gitkeep` keeps an empty folder in git; the others are editor and operating-system files, which `.gitignore` keeps out of the repository.)
 
 ## Check your changes
 

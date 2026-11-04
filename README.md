@@ -46,17 +46,18 @@ STEMularity is open knowledge. Everyone who works on the project makes these com
 
 - Sources are links only. This repository never hosts copies of copyrighted papers.
 - Summaries and checkpoint notes are written in your own words, not pasted from papers.
-- The validator rejects any file under `data/` that is not JSON or Markdown.
+- The validator rejects any file under `data/` whose name doesn't end in `.json` or `.md`. It ignores `.gitkeep` and common editor and operating-system files: `.DS_Store`, `Thumbs.db` and `desktop.ini` (the last two in any letter case), names that start with `._` or `.#`, Emacs auto-save files such as `#x.json#`, names that end in `~`, and Vim swap files (hidden files whose names end in `.swa` to `.swp`, such as `.x.json.swp`).
+- The validator checks file names, not contents, so reviewers still check that nothing is copied in.
 
-The pledge is a community commitment, not legal advice: the legal terms are in [LICENSE](LICENSE) and [LICENSE-CONTENT](LICENSE-CONTENT).
+The pledge is a community commitment, not a legal agreement or a patent license. [LICENSE](LICENSE) and [LICENSE-CONTENT](LICENSE-CONTENT) cover copyright: CC BY 4.0 does not license patent or trademark rights (section 2(b)(2)), and the MIT License has no express patent grant.
 
 ## How it works
 
 Each problem is one JSON file in [`data/problems/`](data/problems/). Every file is checked against the JSON Schema in [`data/schema/`](data/schema/).
 
 - **Status.** Every problem has one of four statuses:
-  - **Open:** not settled, and open-ended. There is no single agreed statement of what "solved" means yet, so progress is measured in milestones.
-  - **Unsolved:** precisely stated, with a definite answer that nobody has found yet.
+  - **Open:** not settled, and open-ended. There is no single agreed statement of what "solved" means yet, so progress is measured in milestones (for example a technology goal, or a phenomenon whose explanation has not been narrowed to one precise question yet).
+  - **Unsolved:** precisely stated, with a definite answer that nobody has found yet (for example a conjecture with no accepted proof or disproof).
   - **Solved:** answered as posed, by a proof, disproof, construction, algorithm or measurement that has been accepted.
   - **Resolved:** closed without an answer as posed, because it was shown impossible, independent of the usual axioms, or ill-posed, or because it was superseded.
 - **Progress map.** An ordered list of checkpoints, from the first step to a full solution. Each checkpoint has a status: done, in progress, not started, disputed or dead end. Once work starts, it also records who did the work and when, with links to it. Dead ends stay on the map so nobody repeats them.
@@ -64,7 +65,7 @@ Each problem is one JSON file in [`data/problems/`](data/problems/). Every file 
 - **Ratings.** Open and unsolved problems have two ratings from 1 to 10:
   - *Work left*: 1 = almost there, 10 = barely begun.
   - *Significance if fully solved*: 1 = mostly curiosity value, 10 = would change everyday life or technology.
-- **AI effort.** The recommended AI reasoning effort for the next open checkpoint: low, medium, high or max.
+- **AI effort.** The recommended AI reasoning effort for working on the problem now: for the first open checkpoint on its map (one that is in progress, not started or disputed), or, if none is open, for checking and building on the recorded work. The levels are low, medium, high and max.
 - **Sources.** Links to papers, datasets, code and other sources. Links only.
 
 The field-by-field reference is in [docs/DATA_FORMAT.md](docs/DATA_FORMAT.md).
@@ -107,7 +108,9 @@ STEMularity uses one license for code and another for content.
 | Part | License | What it covers |
 | --- | --- | --- |
 | Code | [MIT](LICENSE) | `scripts/`, `site/`, `extension/`, `app/`, `test/`, `data/schema/`, `.github/`, and config files such as `package.json` |
-| Content | [CC BY 4.0](LICENSE-CONTENT) | `data/problems/`, `docs/`, this README and other prose (such as `CONTRIBUTING.md` and the README file in each folder), and STEMgu artwork |
+| Content | [CC BY 4.0](LICENSE-CONTENT) | `data/problems/`, `docs/`, this README and other prose (such as `CONTRIBUTING.md` and the README file in each folder), and artwork such as STEMgu art (for example `site/src/static/assets/stemgu.svg`), wherever it is stored |
+
+Where the rows overlap, the Content row wins for prose files, such as README files, and for artwork stored in code folders. Everything else in a code folder is code, including code comments, the labels and descriptions in `data/schema/`, and code that draws images, such as the checkpoint markers in `site/src/icons.mjs`.
 
 If you reuse content, give credit, link to the source and the license, and say if you changed anything. For example:
 

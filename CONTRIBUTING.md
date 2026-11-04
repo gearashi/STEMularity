@@ -70,6 +70,7 @@ Every field and rule is described in [docs/DATA_FORMAT.md](docs/DATA_FORMAT.md).
 - If a result is claimed but not yet accepted, use `disputed`.
 - If an approach fails, mark it `dead-end` and explain why in its `description`. Don't delete it.
 - Add new checkpoints where they belong on the route, each with a new id.
+- Check that `ai_effort` still fits. It is the recommended AI reasoning effort for working on the problem now: for the first open checkpoint on its map (one that is in progress, not started or disputed), or, if none is open, for checking and building on the recorded work.
 - If the whole problem is now solved or resolved, change `status`, remove `ratings`, and check that the steps that settled it are `done`.
 - Set `updated` to today's date, run `npm run validate`, and open a pull request.
 
@@ -77,7 +78,7 @@ Every field and rule is described in [docs/DATA_FORMAT.md](docs/DATA_FORMAT.md).
 
 1. **Use your own words.** Write summaries and descriptions yourself. Don't paste text from papers, abstracts or websites.
 2. **Link, don't copy.** Point to papers, data and code where they already live. Prefer stable links, such as a DOI link or the publisher's page.
-3. **No copyrighted papers or files in the repository.** Don't commit copies of papers, figures, scans or datasets that others hold the rights to. Under `data/`, only JSON and Markdown files are allowed, and the validator rejects anything else.
+3. **No copyrighted papers or files in the repository.** Don't commit copies of papers, figures, scans or datasets that others hold the rights to. Under `data/`, the validator rejects any file whose name doesn't end in `.json` or `.md`. It ignores `.gitkeep` and common editor and operating-system files: `.DS_Store`, `Thumbs.db` and `desktop.ini` (the last two in any letter case), names that start with `._` or `.#`, Emacs auto-save files such as `#x.json#`, names that end in `~`, and Vim swap files (hidden files whose names end in `.swa` to `.swp`, such as `.x.json.swp`). The validator checks names, not contents, so reviewers still check that nothing is copied in.
 4. **Credit AI involvement honestly.** If an AI system did part of the work, list it in `by` with `"kind": "ai"`, next to the people who directed and checked it. Don't hide AI involvement, and don't overstate it.
 5. **Record dead ends.** A failed approach is useful information. Mark it `dead-end` and say why it failed, so nobody repeats it without a new idea.
 6. **Keep ids stable.** Never rename a problem id or a checkpoint id after it is merged. Links, and later claims on checkpoints, depend on them.
@@ -90,7 +91,7 @@ Ratings and AI effort levels are judgment calls. Pick the closest value and expl
 
 - The code is in `scripts/`, `site/`, `test/` and `data/schema/`.
 - Run `npm run check` before you open a pull request. It runs the validator, the tests and the site build.
-- If you change `data/schema/problem.schema.json`, change `data/schema/vocabulary.json` with it. The validator checks that both list the same values. Update [docs/DATA_FORMAT.md](docs/DATA_FORMAT.md) in the same pull request.
+- If you change `data/schema/problem.schema.json`, change `data/schema/vocabulary.json` with it. The validator checks that both list the same values, and that every value has a label and a description. Update [docs/DATA_FORMAT.md](docs/DATA_FORMAT.md) in the same pull request.
 - Add or update tests in [`test/`](test/) for new rules.
 - Please open an issue before adding a new dependency.
 
@@ -103,9 +104,11 @@ Every pull request runs the "Validate" workflow, [`.github/workflows/validate.ym
 By contributing, you agree that:
 
 - code you contribute is licensed under the [MIT License](LICENSE);
-- content you contribute (problem entries, docs, other prose and artwork) is licensed under [CC BY 4.0](LICENSE-CONTENT);
-- you follow the [Open-Knowledge Pledge](README.md#the-open-knowledge-pledge), including not seeking patents on what you contribute here;
+- content you contribute (problem entries, docs and other prose, and artwork such as STEMgu art, wherever it is stored) is licensed under [CC BY 4.0](LICENSE-CONTENT);
+- you follow the [Open-Knowledge Pledge](README.md#the-open-knowledge-pledge), including not seeking patents on what you contribute here (a community commitment, not a license term);
 - you have the right to contribute it: it is your own work, or you have permission to share it under these licenses.
+
+The [license table in the README](README.md#license) lists which files are code and which are content. Prose files, such as README files, and artwork inside code folders are content. Everything else in a code folder is code, including code comments, the labels and descriptions in `data/schema/`, and code that draws images, such as the checkpoint markers in `site/src/icons.mjs`.
 
 ## Be kind
 
