@@ -1,8 +1,8 @@
 # STEMularity
 
-STEMularity is an open index of every open, unsolved, solved and resolved STEM problem.
+An all-in-one index/website for checking and solving unsolved, open, closed, or resolved science, technology, engineering, and math problems with AI LLM research without having to redo work that had already been done previously.
 
-Each problem has a progress map: an ordered list of checkpoints. The map shows what has been done, what is being worked on, what failed, and what is still left. The goal is that people using AI on STEM problems don't redo work that is already done.
+STEMularity is an open index of every open, unsolved, solved and resolved STEM problem. Each problem has a progress map: an ordered list of checkpoints. The map shows what has been done, what is being worked on, what failed, and what is still left, so people using AI on STEM problems don't redo work that is already done.
 
 > **Status:** foundation only. The index holds 8 made-up sample problems. Nothing is deployed or published yet.
 
