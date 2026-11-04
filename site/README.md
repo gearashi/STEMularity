@@ -111,7 +111,7 @@ A missing or empty folder is fine.
 
 ## STEMgu
 
-`src/static/assets/stemgu.svg` is a placeholder: an original 16×16 pixel sprite of a small flask with a face. Replace it when official STEMgu artwork exists. Like other content, STEMgu art is under CC BY 4.0.
+`src/static/assets/stemgu.svg` is a placeholder: an original 16×16 pixel sprite of a small flask with a face. Replace it when official STEMgu artwork exists, following [docs/DESIGN.md](../docs/DESIGN.md). Like other content, STEMgu art is under CC BY 4.0.
 
 ## Deploying
 

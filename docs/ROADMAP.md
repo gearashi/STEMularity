@@ -144,5 +144,5 @@ Ideas and comments are welcome. Open an issue or a pull request.
 
 - **Real data import.** Replace the made-up samples with real problems, with sources and review.
 - **Review and verification.** A clear process for accepting checkpoints as `done` and for settling `disputed` ones.
-- **Official STEMgu art.** Replace any placeholder art with the official design.
+- **Official STEMgu art.** Replace any placeholder art with the official design. [DESIGN.md](DESIGN.md) says where it goes and what rules it must follow.
 - **Translations.** The site, the docs and the problem summaries in more languages.

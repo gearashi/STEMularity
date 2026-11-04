@@ -16,7 +16,7 @@ STEMularity is an open index of every open, unsolved, solved and resolved STEM p
 
 STEMgu is the STEMularity mascot. STEMgu will be your guide in the offline app planned for later.
 
-Official artwork is still to come. Until then, any STEMgu art in this repository is an original placeholder, and it is labeled as one.
+Official artwork is still to come. Until then, any STEMgu art in this repository is an original placeholder, and it is labeled as one. [docs/DESIGN.md](docs/DESIGN.md) explains where the art goes and the rules it must follow.
 
 ## Project status
 
@@ -80,7 +80,7 @@ The field-by-field reference is in [docs/DATA_FORMAT.md](docs/DATA_FORMAT.md).
 | [`site/`](site/) | The static website generator. It builds the site into `site/dist/`. |
 | [`extension/`](extension/) | The browser extension, planned for later. No code yet. |
 | [`app/`](app/) | The offline app "Project: STEMularity", planned for later. No code yet. |
-| [`docs/`](docs/) | The data format, how to deploy the site, and the roadmap. |
+| [`docs/`](docs/) | The data format, how to deploy the site, the art and design guide, and the roadmap. |
 | [`test/`](test/) | Automated tests. |
 | [`.github/`](.github/) | The "Validate" workflow, which runs on every pull request and every push to `main`, and the issue forms for reporting progress and suggesting problems. |
 
