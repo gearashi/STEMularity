@@ -1,8 +1,58 @@
 # Contributing to STEMularity
 
-Anyone can contribute. You can add a problem, update a progress map, fix a mistake, or improve the code. To report a mistake or suggest an idea without editing files, open an issue.
+Anyone can contribute. The progress maps stay up to date because people report what they find: new results, work in progress, failed attempts, disputed claims, new sources and corrections.
 
-All changes go through pull requests on GitHub, so every change is public and reviewed. By contributing, you agree to the [Open-Knowledge Pledge](README.md#the-open-knowledge-pledge) and to the [licensing terms below](#licensing-of-contributions).
+There are two ways to help:
+
+1. **Report it in an issue.** No Git or JSON needed. This is how most updates arrive. See [Report progress in an issue](#report-progress-in-an-issue).
+2. **Change the files yourself** with a pull request, if you know Git. See [Change the files yourself](#change-the-files-yourself).
+
+Every change to the files goes through a pull request, often one made from an issue, so every change is public and reviewed. By contributing, you agree to the [Open-Knowledge Pledge](README.md#the-open-knowledge-pledge) and to the [licensing terms below](#licensing-of-contributions).
+
+## Report progress in an issue
+
+Open a [new issue](https://github.com/gearashi/STEMularity/issues/new/choose) and pick a form:
+
+- **Report progress on a problem**: a new result or milestone, work that has started, a failed attempt, a disputed claim, a new source, or a correction. On the website, each problem page has a "Report progress" button, and each checkpoint a "Report progress on this step" link, that open this form with the problem (and the step) filled in.
+- **Suggest a new problem**: a problem that isn't in the index yet.
+
+Fill in:
+
+- **What happened**, in your own words. Don't paste text from papers.
+- **Links to the work**: the paper, preprint, code, data, write-up or discussion. Link, don't copy: don't attach copies of papers to the issue either.
+- **Who did the work**, and **whether AI was involved**, so everyone gets credit.
+- **When** it happened, if you know.
+
+Then:
+
+- Anyone can add details or links in the comments, or say why they think a claim is wrong.
+- If you are starting work on a step, say so with the "Work has started on a step" option. Others will see it on the map before they start the same work.
+- Someone turns the report into a pull request that updates the problem's file, as described in [Turn a report into a change](#turn-a-report-into-a-change). The pull request says `Closes #<issue number>`, so the issue closes when the map is updated.
+
+## Turn a report into a change
+
+Maintainers do this, and so can any contributor who knows Git. Follow [Set up](#set-up) first.
+
+1. Open the problem's file, `data/problems/<id>.json`. For a new problem, follow [Add a problem](#add-a-problem).
+2. Make the change the report describes:
+
+   | The report says | Change in the file |
+   | --- | --- |
+   | A step was reached | Set the checkpoint to `done`, or add a new `done` checkpoint where it belongs on the route. Add `by`, `date` and `links`. |
+   | Work has started on a step | Set it to `in-progress` and add `by`, plus the start `date` if known. |
+   | An attempt failed | Add or update a `dead-end` checkpoint, and say why it failed in its `description`. |
+   | A claim is disputed | Set it to `disputed`, with `by` and `date`, and link to the claim and to the replies. |
+   | A new source | Add it to `sources`. |
+   | A correction | Fix the field, and say what changed in the pull request. |
+
+3. Credit everyone named under "Who did the work?" in `by`. If AI was involved, add the AI system with `"kind": "ai"` next to the people who directed or checked it. Ask in the issue if a name is missing.
+4. Check that the links work and point to the work itself. Summarize in your own words.
+5. Only mark a step `done` when a source shows the result is accepted. If you can't confirm a report, ask in the issue, or record it as `disputed`.
+6. Set `updated` to today's date, run `npm run validate`, and open a pull request that says `Closes #<issue number>`. Thank the reporter.
+
+## Change the files yourself
+
+The rest of this guide is for changing the files directly, with Git and a pull request.
 
 ## Set up
 
@@ -106,7 +156,8 @@ By contributing, you agree that:
 - code you contribute is licensed under the [MIT License](LICENSE);
 - content you contribute (problem entries, docs and other prose, and artwork such as STEMgu art, wherever it is stored) is licensed under [CC BY 4.0](LICENSE-CONTENT);
 - you follow the [Open-Knowledge Pledge](README.md#the-open-knowledge-pledge), including not seeking patents on what you contribute here (a community commitment, not a license term);
-- you have the right to contribute it: it is your own work, or you have permission to share it under these licenses.
+- you have the right to contribute it: it is your own work, or you have permission to share it under these licenses;
+- what you write in an issue form can be added to STEMularity under CC BY 4.0 (the forms ask you to agree to this).
 
 The [license table in the README](README.md#license) lists which files are code and which are content. Prose files, such as README files, and artwork inside code folders are content. Everything else in a code folder is code, including code comments, the labels and descriptions in `data/schema/`, and code that draws images, such as the checkpoint markers in `site/src/icons.mjs`.
 

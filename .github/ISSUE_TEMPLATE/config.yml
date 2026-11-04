@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: How to contribute
+    url: https://github.com/gearashi/STEMularity/blob/main/CONTRIBUTING.md
+    about: Report progress, suggest a problem, or change the files yourself with a pull request.

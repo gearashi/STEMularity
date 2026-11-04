@@ -1,0 +1,88 @@
+name: Report progress on a problem
+description: Share a new result, work in progress, a failed attempt, a disputed claim, a new source or a correction for a problem in the index.
+title: "[Progress] "
+labels: ["progress-update"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping keep the progress maps up to date. Someone turns each report into a change to the problem's file, credits the people and AI systems who did the work, and links that change here.
+
+        **Link, don't copy.** Link to papers, preprints, code, data and write-ups. Don't attach copies of papers or other files you don't hold the rights to.
+  - type: input
+    id: problem
+    attributes:
+      label: Problem
+      description: The problem's id or name, as shown on its page on the STEMularity site.
+      placeholder: lanternfish-tiling-conjecture
+    validations:
+      required: true
+  - type: dropdown
+    id: update-type
+    attributes:
+      label: What kind of update is this?
+      options:
+        - "A step was reached: a new result or milestone"
+        - "Work has started on a step"
+        - "An attempt failed: a dead end"
+        - "A claim is disputed or could not be reproduced"
+        - "A new source or reference"
+        - "A correction to the entry"
+        - "Something else"
+    validations:
+      required: true
+  - type: input
+    id: checkpoint
+    attributes:
+      label: Checkpoint
+      description: The id of the step this is about, from the step's link on the problem page. Leave it empty for a new step, or if you aren't sure.
+      placeholder: patch-search
+  - type: textarea
+    id: details
+    attributes:
+      label: What happened?
+      description: In your own words, describe the result, attempt, claim or correction, and how it changes where the problem stands. Don't paste text from papers.
+    validations:
+      required: true
+  - type: textarea
+    id: links
+    attributes:
+      label: Links to the work
+      description: One link per line, to the paper, preprint, code, data, write-up or discussion. Each link starts with http:// or https://.
+      placeholder: |
+        https://arxiv.org/abs/...
+        https://github.com/...
+    validations:
+      required: true
+  - type: input
+    id: who
+    attributes:
+      label: Who did the work?
+      description: The people, groups and AI systems that took part. Write "me" for your own work.
+  - type: dropdown
+    id: ai
+    attributes:
+      label: Was AI involved?
+      description: STEMularity credits AI work openly, next to the people who directed or checked it.
+      options:
+        - "No"
+        - "Yes, with people directing or checking it"
+        - "Yes, mostly done by AI"
+        - "I don't know"
+    validations:
+      required: true
+  - type: input
+    id: date
+    attributes:
+      label: When?
+      description: When the result was reached, the work started, or the attempt was given up, as YYYY, YYYY-MM or YYYY-MM-DD.
+      placeholder: "2026-11-04"
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Before you submit
+      options:
+        - label: I wrote this in my own words, and I linked to sources instead of attaching copies of papers.
+          required: true
+        - label: I agree that what I write here can be added to STEMularity under CC BY 4.0, and I follow the [Open-Knowledge Pledge](https://github.com/gearashi/STEMularity/blob/main/README.md#the-open-knowledge-pledge).
+          required: true

@@ -82,7 +82,7 @@ The field-by-field reference is in [docs/DATA_FORMAT.md](docs/DATA_FORMAT.md).
 | [`app/`](app/) | The offline app "Project: STEMularity", planned for later. No code yet. |
 | [`docs/`](docs/) | The data format, how to deploy the site, and the roadmap. |
 | [`test/`](test/) | Automated tests. |
-| [`.github/workflows/`](.github/workflows/) | The "Validate" workflow, which runs on every pull request and every push to `main`. |
+| [`.github/`](.github/) | The "Validate" workflow, which runs on every pull request and every push to `main`, and the issue forms for reporting progress and suggesting problems. |
 
 ## Quick start
 
@@ -99,7 +99,9 @@ npm run preview    # build the site and serve it at http://127.0.0.1:8788
 
 ## Contributing
 
-Anyone can add a problem, update a progress map, or improve the code. Everything goes through pull requests. See [CONTRIBUTING.md](CONTRIBUTING.md).
+The progress maps stay up to date because people report what they find. The easiest way to help is a GitHub issue: [open an issue](https://github.com/gearashi/STEMularity/issues/new/choose) with the **Report progress on a problem** form, say what happened, and link to the work. The site's problem pages link to that form with the problem filled in. To add a problem, use the **Suggest a new problem** form. Each report is turned into a change to the problem's file, with everyone who did the work credited.
+
+If you know Git, you can also change the files yourself with a pull request. [CONTRIBUTING.md](CONTRIBUTING.md) explains both routes.
 
 ## License
 

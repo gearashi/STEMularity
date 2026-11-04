@@ -9,7 +9,7 @@ import { externalLink, html, raw } from './html.mjs';
 import { formatDate, formatYear, isBceDate, plural, truncate } from './format.mjs';
 import { marker, markerSprite } from './icons.mjs';
 import { layout } from './layout.mjs';
-import { CC_BY_URL, REPO_URL, repoEditUrl, repoFileUrl } from './config.mjs';
+import { CC_BY_URL, NEW_PROBLEM_FORM, PROGRESS_FORM, REPO_URL, newIssueUrl, repoEditUrl, repoFileUrl } from './config.mjs';
 
 const SITE_DESCRIPTION =
   'An open index of open, unsolved, solved and resolved STEM problems, each with a checkpoint-style progress map.';
@@ -203,7 +203,7 @@ ${problems.map((problem) => problemCard(problem, ctx))}      </ul>
 <div class="wrap">
   <h1>Problems</h1>
   <p class="lede">An open index of STEM problems: open, unsolved, solved and resolved. Each problem has a progress map of checkpoints, so you can see what is done, what failed and what is next before you start work with AI.</p>
-  <p class="lede-link"><a href="about/index.html#statuses">What the statuses, checkpoints and ratings mean</a></p>
+  <p class="lede-link"><a href="about/index.html#statuses">What the statuses, checkpoints and ratings mean</a>${SEP}<a href="${newIssueUrl(NEW_PROBLEM_FORM)}" rel="noopener noreferrer">Suggest a problem</a></p>
   ${total === 0 ? nothingYet : html`<div class="index-layout">
     ${noscript}
     ${controls}
@@ -311,9 +311,9 @@ function renderProblem(problem, ctx) {
   ${progressSection(problem, v)}
   ${sourcesSection(problem, v)}
   <section class="panel improve" aria-labelledby="improve-title">
-    <h2 id="improve-title">Improve this entry</h2>
-    <p>Know of progress that is missing here, or spotted a mistake? Anyone can suggest a change to this entry on GitHub.</p>
-    <p class="actions"><a class="button" href="${repoEditUrl(`data/problems/${problem.id}.json`)}" rel="noopener noreferrer">Improve this entry</a> <a class="button button-quiet" href="../${problem.id}.json">Raw data (JSON)</a></p>
+    <h2 id="improve-title">Add progress or fix this entry</h2>
+    <p>Know of a new result, work in progress, a failed attempt, a new source, or a mistake here? Report it in a GitHub issue, with links to the work. Each report is turned into an update of this progress map, and everyone who did the work is credited.</p>
+    <p class="actions"><a class="button" href="${progressReportUrl(problem)}" rel="noopener noreferrer">Report progress</a> <a class="button button-quiet" href="${repoEditUrl(`data/problems/${problem.id}.json`)}" rel="noopener noreferrer">Edit the file on GitHub</a> <a class="button button-quiet" href="../${problem.id}.json">Raw data (JSON)</a></p>
   </section>
 </div>`;
 
@@ -372,6 +372,13 @@ function progressSummary(steps, v) {
   return parts.map((part, i) => html`${i ? SEP : ''}<span class="nowrap">${part}</span>`);
 }
 
+/** The progress-report issue form, filled in for a problem (and one of its checkpoints). */
+function progressReportUrl(problem, step) {
+  const fields = { title: `[Progress] ${problem.name}`, problem: problem.id };
+  if (step) fields.checkpoint = step.id;
+  return newIssueUrl(PROGRESS_FORM, fields);
+}
+
 function progressSection(problem, v) {
   const steps = problem.progress;
   const nodes = steps.map((step, i) => {
@@ -386,6 +393,7 @@ function progressSection(problem, v) {
           ${step.description ? html`<p class="cp-description">${step.description}</p>` : ''}
           ${step.by?.length || step.date ? html`<p class="cp-meta">${step.by?.length ? html`<span>By ${contributors(step.by, v)}</span>` : ''}${step.by?.length && step.date ? SEP : ''}${step.date ? html`<span class="cp-when">${dateLabel} ${dateTime(step.date)}</span>` : ''}</p>` : ''}
           ${step.links?.length ? html`<ul class="cp-links" role="list">${step.links.map((link) => html`<li>${externalLink(link.url, link.title)}</li>`)}</ul>` : ''}
+          <p class="cp-report"><a href="${progressReportUrl(problem, step)}" rel="noopener noreferrer">Report progress on this step<span class="visually-hidden">: ${step.title}</span></a></p>
         </div>
       </li>`;
   });
@@ -484,7 +492,8 @@ ${items.map(([term, text]) => html`    <div><dt>${term}</dt><dd>${text}</dd></di
   <p>These static files are a first step toward an API for AI agents. The problem data is under CC BY 4.0; the schema and vocabulary files are under MIT.</p>
 
   <h2 id="contribute">Contribute</h2>
-  <p>Every problem is a JSON file in the <a href="${REPO_URL}" rel="noopener noreferrer">GitHub repository</a>. To add progress or fix a mistake, use the "Improve this entry" link on a problem's page, or open a pull request. The <a href="${repoFileUrl('CONTRIBUTING.md')}" rel="noopener noreferrer">contributing guide</a> explains the steps, and the <a href="${repoFileUrl('docs/DATA_FORMAT.md')}" rel="noopener noreferrer">data format guide</a> explains every field.</p>
+  <p>The progress maps stay up to date because people report what they find. To add progress, open the problem's page and use "Report progress": a short GitHub issue form asks what happened and for links to the work. Each report is turned into an update of the progress map. To add a problem, <a href="${newIssueUrl(NEW_PROBLEM_FORM)}" rel="noopener noreferrer">suggest a problem</a> the same way.</p>
+  <p>Every problem is a JSON file in the <a href="${REPO_URL}" rel="noopener noreferrer">GitHub repository</a>, so if you know Git you can also change the files yourself with a pull request. The <a href="${repoFileUrl('CONTRIBUTING.md')}" rel="noopener noreferrer">contributing guide</a> explains both routes, and the <a href="${repoFileUrl('docs/DATA_FORMAT.md')}" rel="noopener noreferrer">data format guide</a> explains every field.</p>
 
   <h2 id="stemgu">STEMgu</h2>
   <div class="mascot">

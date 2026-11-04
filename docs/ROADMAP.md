@@ -11,6 +11,27 @@ Ideas and comments are welcome. Open an issue or a pull request.
 - A validator, tests, and a GitHub Action that runs them on every pull request.
 - 8 made-up sample problems.
 - A static website starter in [`site/`](../site/): a sortable, filterable list of problems, a page for each problem with its progress map, and a `problems.json` export. It is not deployed yet. See [DEPLOYING.md](DEPLOYING.md).
+- GitHub issue forms for reporting progress and suggesting problems. Every problem page and checkpoint links to the progress form with the problem filled in. See [CONTRIBUTING.md](../CONTRIBUTING.md#report-progress-in-an-issue).
+
+## From issues to progress maps
+
+**Status:** Not started
+
+**Goal:** Most updates arrive as GitHub issues: someone reports a result, a failed attempt or a new source, with links. Make turning those reports into changes to the problem files fast and reliable, so the maps stay current as the community posts.
+
+**Rough scope:**
+
+- A GitHub Action that reads a progress report and drafts the change: a pull request that edits the problem's file, or a comment with a suggested change. The "Validate" workflow checks it, and a person reviews and merges it.
+- Optionally, an AI agent drafts the change from the report and the work it links to. Every pull request still gets a human review.
+- Labels and a triage routine, such as `progress-update`, `new-problem`, `needs-source` and `duplicate`.
+- Show on each problem page the open reports about it, and on each checkpoint the issues that changed it.
+
+**Open questions:**
+
+- How much evidence is needed before a step is marked `done`? A link to a published result, a second confirmation, or a maintainer's judgment?
+- How do we handle spam and low-quality reports?
+- Security: the automation reads untrusted issue text, so it must run without secrets and with the least permissions, and never run anything taken from an issue.
+- How do we credit the people who report progress, as well as the people who did the work?
 
 ## Accounts, claims and spot locking
 
@@ -25,6 +46,7 @@ Ideas and comments are welcome. Open an issue or a pull request.
 - Claims expire unless they are renewed, so a forgotten claim doesn't block anyone for long.
 - Release a claim, or hand it over to someone else.
 - Keep the history of claims open.
+- Until this exists, a progress report with the "Work has started on a step" option is the way to say you are working on a step.
 
 **Open questions:**
 

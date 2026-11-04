@@ -1181,6 +1181,11 @@ select {
   font-size: 0.92rem;
 }
 
+.cp-report {
+  margin: 0.4rem 0 0;
+  font-size: 0.88rem;
+}
+
 .legend h3 {
   font-size: 1rem;
 }

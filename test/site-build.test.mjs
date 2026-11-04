@@ -385,6 +385,22 @@ describe('build from data/', () => {
     }
   });
 
+  it('links each problem, and each of its steps, to a filled-in progress report', () => {
+    const report = (problem, step) => {
+      const title = encodeURIComponent(`[Progress] ${problem.name}`);
+      const query = `template=progress-update.yml&title=${title}&problem=${encodeURIComponent(problem.id)}${step ? `&checkpoint=${encodeURIComponent(step.id)}` : ''}`;
+      // The page writes the address inside an attribute, so each & is escaped.
+      return `href="https://github.com/gearashi/STEMularity/issues/new?${query.replaceAll('&', '&amp;')}"`;
+    };
+    for (const problem of realProblems) {
+      const page = files.get(`problems/${problem.id}/index.html`);
+      assert.ok(page.includes(`${report(problem)} rel="noopener noreferrer">Report progress</a>`), problem.id);
+      for (const step of problem.progress) assert.ok(page.includes(report(problem, step)), `${problem.id}: ${step.id}`);
+    }
+    assert.ok(files.get('index.html').includes('href="https://github.com/gearashi/STEMularity/issues/new?template=new-problem.yml" rel="noopener noreferrer">Suggest a problem</a>'));
+    assert.ok(files.get('about/index.html').includes('href="https://github.com/gearashi/STEMularity/issues/new?template=new-problem.yml"'));
+  });
+
   it('shows the sample-data banner on every page while samples exist', () => {
     if (!realProblems.some((problem) => problem.sample === true)) return;
     for (const file of html) {
@@ -432,6 +448,10 @@ describe('build from hostile data', () => {
     assert.ok(page.includes('&quot;quoted&quot; &amp; &#39;single&#39;'));
     assert.ok(page.includes('href="https://example.org/people?a=1&amp;b=2"'));
     assert.ok(files.get('index.html').includes('&lt;script&gt;alert(1)&lt;/script&gt;'));
+    // In the progress-report links the name is percent-encoded, so nothing in it can end the attribute.
+    const title = encodeURIComponent(`[Progress] ${nastyProblem.name}`);
+    assert.match(title, /%3Cscript%3E/);
+    assert.ok(page.includes(`${escapeHtml(`&title=${title}&problem=${nastyProblem.id}`)}"`), 'report link');
   });
 
   it('cannot break out of attributes or add active content', () => {
