@@ -1,0 +1,92 @@
+{
+  "$schema": "../schema/problem.schema.json",
+  "id": "quillon-prime-ladder",
+  "name": "Quillon Prime Ladder Problem",
+  "aliases": ["The ladder number problem"],
+  "field": "mathematics",
+  "category": "Number theory",
+  "tags": ["prime-numbers", "set-theory", "independence", "sample-data"],
+  "status": "resolved",
+  "summary": "Made-up sample problem. A Quillon ladder is a fictional kind of infinite sequence of primes in which each prime limits where the next one can fall. The problem asked how many ladders it takes for every infinite set of primes to share infinitely many members with at least one of them: as many as there are real numbers, or fewer? In 2025 the question was shown to be independent of the standard axioms of set theory, so it can be neither proved nor disproved from them.",
+  "ai_effort": "max",
+  "progress": [
+    {
+      "id": "problem-posed",
+      "title": "Ladders defined and the question posed",
+      "description": "The rule linking each prime in a ladder to the next was fixed, and the counting question was stated in its current form. All ladders taken together are always enough, so the question is whether fewer will do.",
+      "status": "done",
+      "by": [{ "name": "Cy Sampleton", "kind": "person" }],
+      "date": "2011-04",
+      "links": [{ "title": "Original problem statement (sample link)", "url": "https://example.org/quillon/statement" }]
+    },
+    {
+      "id": "countable-not-enough",
+      "title": "Countably many ladders are never enough",
+      "description": "A diagonal argument showed that no countable family of ladders is enough: some infinite set of primes always shares only finitely many members with each ladder. So in any model of set theory with no infinite size between that of the whole numbers and that of the real numbers, as many ladders as real numbers are needed. Such models exist, so the axioms cannot rule that answer out.",
+      "status": "done",
+      "by": [{ "name": "Ola Ipsum", "kind": "person" }],
+      "date": "2016-05",
+      "links": [{ "title": "Write-up of the diagonal argument (sample link)", "url": "https://example.org/quillon/countable-bound" }]
+    },
+    {
+      "id": "prime-gap-route",
+      "title": "Prime-gap proof attempts",
+      "description": "Several attempts tried to settle the question using only facts about the gaps between primes. Such facts handle only countably many ladders at a time, so they cannot decide it. The later independence result confirms that this route cannot work.",
+      "status": "dead-end",
+      "by": [{ "name": "Example Logic Seminar", "kind": "group" }],
+      "date": "2019-09",
+      "links": [{ "title": "Notes on the failed attempts (sample link)", "url": "https://example.org/quillon/prime-gap-notes" }]
+    },
+    {
+      "id": "independence-shown",
+      "title": "Question shown independent of the standard axioms",
+      "description": "A model of set theory was built in which fewer ladders than there are real numbers are enough. With the 2016 result, this means the standard axioms can neither prove nor disprove that as many ladders as real numbers are needed. That closes the problem as posed. An AI model first suggested the key counting step, which was then proved by hand.",
+      "status": "done",
+      "by": [
+        { "name": "Ren Loremson", "kind": "person" },
+        { "name": "Placeholder Reasoning Model", "kind": "ai" }
+      ],
+      "date": "2025-02-17",
+      "links": [
+        { "title": "Independence proof (sample link)", "url": "https://example.org/quillon/independence-proof" },
+        { "title": "AI session log for the counting step (sample link)", "url": "https://example.org/quillon/ai-session-log" }
+      ]
+    },
+    {
+      "id": "formal-proof",
+      "title": "Machine-checked proof of both halves",
+      "description": "Formalize both halves of the independence result in a proof assistant, so it does not rest on a hand check. The countable bound is done; the model construction is about half finished.",
+      "status": "in-progress",
+      "by": [
+        { "name": "Ola Ipsum", "kind": "person" },
+        { "name": "Example Proof Assistant", "kind": "ai" }
+      ],
+      "date": "2025-10",
+      "links": [{ "title": "Formalization repository (sample link)", "url": "https://example.org/quillon/formal-proof" }]
+    },
+    {
+      "id": "extra-axioms",
+      "title": "Check which extra axioms decide the question",
+      "description": "Find out whether widely studied extra axioms of set theory settle the question one way or the other. This is a follow-up: it would not reopen the problem as posed.",
+      "status": "not-started"
+    }
+  ],
+  "sources": [
+    {
+      "title": "Ladders of primes and the sets they meet (sample source)",
+      "url": "https://example.org/papers/quillon-ladders",
+      "kind": "paper",
+      "authors": ["Cy Sampleton"],
+      "year": 2011
+    },
+    {
+      "title": "The ladder number is independent of the standard axioms (sample source)",
+      "url": "https://example.org/papers/quillon-independence",
+      "kind": "paper",
+      "authors": ["Ren Loremson"],
+      "year": 2025
+    }
+  ],
+  "sample": true,
+  "updated": "2026-09-22"
+}

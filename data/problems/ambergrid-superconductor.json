@@ -1,0 +1,114 @@
+{
+  "$schema": "../schema/problem.schema.json",
+  "id": "ambergrid-superconductor",
+  "name": "Ambergrid Room-Temperature Superconductor",
+  "field": "physics",
+  "category": "Condensed matter",
+  "tags": ["superconductivity", "materials-discovery", "reproducibility", "sample-data"],
+  "status": "open",
+  "summary": "Made-up sample problem. Ambergrid lattices are a fictional family of layered crystals that theory suggests might superconduct, carrying current with no resistance, at room temperature. This is an open-ended materials goal rather than a single question: progress is measured by how warm a confirmed ambergrid superconductor can get at normal pressure. The best confirmed crystal superconducts only below about -190 °C, and a 2024 claim of superconductivity near room temperature could not be reproduced.",
+  "ai_effort": "max",
+  "ratings": {
+    "work_left": 9,
+    "significance": 10
+  },
+  "progress": [
+    {
+      "id": "family-proposed",
+      "title": "Ambergrid family proposed from theory",
+      "description": "Calculations suggested that electrons in some ambergrid lattices could stay paired, and so superconduct, at much higher temperatures than usual.",
+      "status": "done",
+      "by": [{ "name": "Vera Specimen", "kind": "person" }],
+      "date": "2017-05",
+      "links": [{ "title": "Theory write-up (sample link)", "url": "https://example.org/ambergrid/theory" }]
+    },
+    {
+      "id": "first-crystals",
+      "title": "First ambergrid crystals grown and tested",
+      "description": "Small crystals were grown for the first time. They superconduct, but only below about -230 °C.",
+      "status": "done",
+      "by": [{ "name": "Sample Materials Lab", "kind": "group" }],
+      "date": "2019-10",
+      "links": [{ "title": "Growth and measurement report (sample link)", "url": "https://example.org/ambergrid/first-crystals" }]
+    },
+    {
+      "id": "high-pressure-route",
+      "title": "Squeezing crystals to raise the temperature",
+      "description": "High pressure raised the superconducting temperature by only a few degrees before the layers broke apart. Pressure also works against the goal, which is a material that superconducts at normal pressure. Do not retry without a new way to keep the layers intact.",
+      "status": "dead-end",
+      "by": [{ "name": "Kit Testwell", "kind": "person" }],
+      "date": "2021-03",
+      "links": [{ "title": "Pressure study notes (sample link)", "url": "https://example.org/ambergrid/pressure-notes" }]
+    },
+    {
+      "id": "variant-search",
+      "title": "AI-assisted search through 40,000 variants",
+      "description": "An AI model ranked about 40,000 possible ambergrid variants by how likely they are to superconduct at higher temperatures. The lab made and tested the twelve best candidates. The best of them superconducts below about -190 °C, the confirmed record for the family.",
+      "status": "done",
+      "by": [
+        { "name": "Sample Materials Lab", "kind": "group" },
+        { "name": "Mock Materials Model", "kind": "ai" }
+      ],
+      "date": "2023-02",
+      "links": [
+        { "title": "Search code (sample link)", "url": "https://example.org/ambergrid/search-code" },
+        { "title": "Ranked candidate list (sample link)", "url": "https://example.org/ambergrid/candidates" }
+      ]
+    },
+    {
+      "id": "ag7-claim",
+      "title": "Claimed superconductivity at 18 °C in variant AG-7",
+      "description": "A team reported zero resistance up to 18 °C in a variant called AG-7. Two other teams made AG-7 and saw no superconductivity. The sudden drop in resistance may come from an impurity in the original samples. The claim has been neither confirmed nor withdrawn.",
+      "status": "disputed",
+      "by": [{ "name": "Demo Crystal Lab", "kind": "group" }],
+      "date": "2024-07-22",
+      "links": [
+        { "title": "Claim and raw data (sample link)", "url": "https://example.org/ambergrid/ag7-claim" },
+        { "title": "First failed replication (sample link)", "url": "https://example.org/ambergrid/ag7-replication-1" },
+        { "title": "Second failed replication (sample link)", "url": "https://example.org/ambergrid/ag7-replication-2" }
+      ]
+    },
+    {
+      "id": "ag7-retest",
+      "title": "Blind re-test of AG-7 with purer samples",
+      "description": "Four labs are growing purer AG-7 crystals and measuring them blind, with one shared written method. An AI agent checks the raw data for common measurement errors, such as poor electrical contacts.",
+      "status": "in-progress",
+      "by": [
+        { "name": "Placeholder Replication Network", "kind": "group" },
+        { "name": "Example Research Agent", "kind": "ai" }
+      ],
+      "date": "2025-01",
+      "links": [{ "title": "Shared re-test method (sample link)", "url": "https://example.org/ambergrid/ag7-retest-method" }]
+    },
+    {
+      "id": "room-temperature-confirmed",
+      "title": "Room-temperature superconductor confirmed at normal pressure",
+      "description": "Make an ambergrid material that superconducts at room temperature and normal pressure, and have at least two independent labs reproduce it. Even then, turning it into practical wires and cables would be further work.",
+      "status": "not-started"
+    }
+  ],
+  "sources": [
+    {
+      "title": "Ambergrid lattices as a route to warm superconductivity (sample source)",
+      "url": "https://example.org/papers/ambergrid-theory",
+      "kind": "paper",
+      "authors": ["Vera Specimen"],
+      "year": 2017
+    },
+    {
+      "title": "Ambergrid variant search results (sample source)",
+      "url": "https://example.org/datasets/ambergrid-search",
+      "kind": "dataset",
+      "year": 2023
+    },
+    {
+      "title": "Zero resistance near room temperature in ambergrid variant AG-7 (sample source)",
+      "url": "https://example.org/preprints/ambergrid-ag7",
+      "kind": "preprint",
+      "authors": ["Demo Crystal Lab"],
+      "year": 2024
+    }
+  ],
+  "sample": true,
+  "updated": "2026-10-27"
+}

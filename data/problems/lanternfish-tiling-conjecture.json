@@ -61,7 +61,7 @@
     {
       "id": "formal-proof",
       "title": "Machine-checked formal proof",
-      "description": "Formalise the complete argument in a proof assistant so the result does not rest on a hand check.",
+      "description": "Formalize the complete argument in a proof assistant so the result does not rest on a hand check.",
       "status": "not-started"
     }
   ],
