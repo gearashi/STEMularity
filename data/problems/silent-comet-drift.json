@@ -7,7 +7,7 @@
   "tags": ["comets", "orbit-determination", "non-gravitational-forces", "sample-data"],
   "status": "open",
   "summary": "Made-up sample problem. The fictional Silent Comet shows no visible tail or gas, yet on each orbit it reaches its closest point to the Sun about 90 minutes later than gravity alone predicts. Rechecks of old observations show that the drift is real. Candidate explanations include gas jets too faint to see, a small unseen companion and the push from uneven heat radiation; none is agreed, and more than one may play a part.",
-  "ai_effort": "low",
+  "ai_effort": "medium",
   "ratings": {
     "work_left": 4,
     "significance": 2

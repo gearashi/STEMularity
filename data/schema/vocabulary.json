@@ -1,9 +1,9 @@
 {
-  "$comment": "Labels and explanations for every enum value in problem.schema.json. The validator checks that the two files list the same values, so update both together. Shared by the site, and later the extension and app.",
+  "$comment": "Labels and descriptions for every fixed value in problem.schema.json: statuses, fields, AI effort levels, ratings, checkpoint statuses, contributor kinds and source kinds. The validator checks that the two files list the same values and that every value has a label and a description, so update both together. Shared by the site, and later the extension and app.",
   "status": {
     "open": {
       "label": "Open",
-      "description": "Not settled, and open-ended: there is no single agreed statement of what \"solved\" means yet, so progress is measured in milestones (for example a technology goal or a phenomenon awaiting an explanation)."
+      "description": "Not settled, and open-ended: there is no single agreed statement of what \"solved\" means yet, so progress is measured in milestones (for example a technology goal, or a phenomenon whose explanation has not been narrowed to one precise question yet)."
     },
     "unsolved": {
       "label": "Unsolved",
@@ -19,15 +19,42 @@
     }
   },
   "field": {
-    "mathematics": { "label": "Mathematics" },
-    "computer-science": { "label": "Computer science" },
-    "physics": { "label": "Physics" },
-    "astronomy": { "label": "Astronomy" },
-    "chemistry": { "label": "Chemistry" },
-    "biology": { "label": "Biology" },
-    "medicine": { "label": "Medicine" },
-    "earth-science": { "label": "Earth science" },
-    "engineering": { "label": "Engineering" }
+    "mathematics": {
+      "label": "Mathematics",
+      "description": "Pure and applied mathematics, including logic and statistics."
+    },
+    "computer-science": {
+      "label": "Computer science",
+      "description": "Computing in theory and practice: algorithms, complexity, programming, AI and systems."
+    },
+    "physics": {
+      "label": "Physics",
+      "description": "Matter, energy and forces, from particles to materials and fluids."
+    },
+    "astronomy": {
+      "label": "Astronomy",
+      "description": "Planets, stars, galaxies and the universe as a whole."
+    },
+    "chemistry": {
+      "label": "Chemistry",
+      "description": "Substances, how they are built and how they react."
+    },
+    "biology": {
+      "label": "Biology",
+      "description": "Living things, from molecules and cells to ecosystems and evolution."
+    },
+    "medicine": {
+      "label": "Medicine",
+      "description": "Human health and disease: causes, diagnosis, treatment and prevention."
+    },
+    "earth-science": {
+      "label": "Earth science",
+      "description": "The Earth's rocks, oceans, atmosphere and climate."
+    },
+    "engineering": {
+      "label": "Engineering",
+      "description": "Designing and building structures, machines, devices, materials and processes."
+    }
   },
   "ai_effort": {
     "low": {
@@ -88,19 +115,55 @@
     }
   },
   "contributor_kind": {
-    "person": { "label": "Person" },
-    "group": { "label": "Group" },
-    "ai": { "label": "AI" }
+    "person": {
+      "label": "Person",
+      "description": "One person."
+    },
+    "group": {
+      "label": "Group",
+      "description": "A team, lab, collaboration or project credited as a whole."
+    },
+    "ai": {
+      "label": "AI",
+      "description": "An AI system or agent. Credit AI work openly, next to the people who directed or checked it."
+    }
   },
   "source_kind": {
-    "paper": { "label": "Paper" },
-    "preprint": { "label": "Preprint" },
-    "book": { "label": "Book" },
-    "article": { "label": "Article" },
-    "website": { "label": "Website" },
-    "dataset": { "label": "Dataset" },
-    "code": { "label": "Code" },
-    "video": { "label": "Video" },
-    "other": { "label": "Other" }
+    "paper": {
+      "label": "Paper",
+      "description": "A paper in a journal or conference proceedings."
+    },
+    "preprint": {
+      "label": "Preprint",
+      "description": "A paper shared before, or without, peer review."
+    },
+    "book": {
+      "label": "Book",
+      "description": "A book, or a chapter of one."
+    },
+    "article": {
+      "label": "Article",
+      "description": "A news, magazine or encyclopedia article, or a blog post."
+    },
+    "website": {
+      "label": "Website",
+      "description": "A web page or site, such as a project page."
+    },
+    "dataset": {
+      "label": "Dataset",
+      "description": "A dataset."
+    },
+    "code": {
+      "label": "Code",
+      "description": "Source code or software."
+    },
+    "video": {
+      "label": "Video",
+      "description": "A recorded talk, lecture or other video."
+    },
+    "other": {
+      "label": "Other",
+      "description": "Anything else."
+    }
   }
 }

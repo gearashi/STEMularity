@@ -1,13 +1,13 @@
 {
   "$schema": "../schema/problem.schema.json",
-  "id": "glasswing-merge-bound",
-  "name": "Glasswing Merge Bound",
+  "id": "thistlewick-merge-bound",
+  "name": "Thistlewick Merge Bound",
   "aliases": ["The 1.5-write merge question"],
   "field": "computer-science",
   "category": "Algorithms",
   "tags": ["merging", "memory-models", "lower-bounds", "sample-data"],
   "status": "solved",
-  "summary": "Made-up sample problem. Glasswing memory is a fictional computer model in which reads are free but every write wears the memory out, so an algorithm's cost is the number of writes it makes. A 2013 proof showed that merging two sorted lists in place needs at least about 1.5 writes per item in the worst case, but the best known method used 2. In 2025 an algorithm that meets this bound was found and checked independently, which solved the problem as posed.",
+  "summary": "Made-up sample problem. Thistlewick memory is a fictional computer model in which reads are free but every write wears the memory out, so an algorithm's cost is the number of writes it makes. A 2013 proof showed that merging two sorted lists in place needs at least about 1.5 writes per item in the worst case, but the best known method used 2. In 2025 an algorithm that meets this bound was found and checked independently, which solved the problem as posed.",
   "ai_effort": "high",
   "progress": [
     {
@@ -17,7 +17,7 @@
       "status": "done",
       "by": [{ "name": "Lin Demoford", "kind": "person" }],
       "date": "2009-11",
-      "links": [{ "title": "Paper defining the model (sample link)", "url": "https://example.org/glasswing/model" }]
+      "links": [{ "title": "Paper defining the model (sample link)", "url": "https://example.org/thistlewick/model" }]
     },
     {
       "id": "lower-bound",
@@ -26,7 +26,7 @@
       "status": "done",
       "by": [{ "name": "Ivo Stubworth", "kind": "person" }],
       "date": "2013-06",
-      "links": [{ "title": "Lower-bound proof (sample link)", "url": "https://example.org/glasswing/lower-bound" }]
+      "links": [{ "title": "Lower-bound proof (sample link)", "url": "https://example.org/thistlewick/lower-bound" }]
     },
     {
       "id": "block-rotation",
@@ -35,7 +35,7 @@
       "status": "dead-end",
       "by": [{ "name": "Sample Sorting Group", "kind": "group" }],
       "date": "2018-02",
-      "links": [{ "title": "Why block rotation stalls at 2 writes per item (sample link)", "url": "https://example.org/glasswing/block-rotation-notes" }]
+      "links": [{ "title": "Why block rotation stalls at 2 writes per item (sample link)", "url": "https://example.org/thistlewick/block-rotation-notes" }]
     },
     {
       "id": "matching-algorithm",
@@ -48,8 +48,8 @@
       ],
       "date": "2025-04-08",
       "links": [
-        { "title": "Algorithm write-up (sample link)", "url": "https://example.org/glasswing/algorithm" },
-        { "title": "Reference code (sample link)", "url": "https://example.org/glasswing/code" }
+        { "title": "Algorithm write-up (sample link)", "url": "https://example.org/thistlewick/algorithm" },
+        { "title": "Reference code (sample link)", "url": "https://example.org/thistlewick/code" }
       ]
     },
     {
@@ -59,7 +59,7 @@
       "status": "done",
       "by": [{ "name": "Example Algorithms Reading Group", "kind": "group" }],
       "date": "2025-09",
-      "links": [{ "title": "Check report and test inputs (sample link)", "url": "https://example.org/glasswing/check-report" }]
+      "links": [{ "title": "Check report and test inputs (sample link)", "url": "https://example.org/thistlewick/check-report" }]
     },
     {
       "id": "formal-proof",
@@ -71,27 +71,27 @@
         { "name": "Example Proof Assistant", "kind": "ai" }
       ],
       "date": "2026-02",
-      "links": [{ "title": "Formal proof so far (sample link)", "url": "https://example.org/glasswing/formal-proof" }]
+      "links": [{ "title": "Formal proof so far (sample link)", "url": "https://example.org/thistlewick/formal-proof" }]
     }
   ],
   "sources": [
     {
-      "title": "Merging in glasswing memory (sample source)",
-      "url": "https://example.org/papers/glasswing-memory",
+      "title": "Merging in thistlewick memory (sample source)",
+      "url": "https://example.org/papers/thistlewick-memory",
       "kind": "paper",
       "authors": ["Lin Demoford"],
       "year": 2009
     },
     {
-      "title": "A write lower bound for in-place merging in glasswing memory (sample source)",
-      "url": "https://example.org/papers/glasswing-lower-bound",
+      "title": "A write lower bound for in-place merging in thistlewick memory (sample source)",
+      "url": "https://example.org/papers/thistlewick-lower-bound",
       "kind": "paper",
       "authors": ["Ivo Stubworth"],
       "year": 2013
     },
     {
       "title": "Merging in place with 1.5 writes per item (sample source)",
-      "url": "https://example.org/preprints/glasswing-merge",
+      "url": "https://example.org/preprints/thistlewick-merge",
       "kind": "preprint",
       "authors": ["Noor Mockwell"],
       "year": 2025

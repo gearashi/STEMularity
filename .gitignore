@@ -5,3 +5,12 @@ site/dist/
 .env
 .env.*
 .wrangler/
+
+# Editor and OS litter. The validator ignores these files under data/ too.
+[Tt]humbs.db
+[Dd]esktop.ini
+._*
+.#*
+\#*#
+*~
+.*.sw[a-p]
