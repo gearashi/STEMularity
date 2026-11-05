@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="64" height="64" shape-rendering="crispEdges">
+<!--
+  STEMgu, the STEMularity mascot. PLACEHOLDER ART.
+  An original 16x16 pixel sprite made for the site starter: a small
+  round-bottom flask with a face. It will be replaced when official
+  STEMgu artwork exists. Each rect is a run of pixels of one color.
+  Content license: CC BY 4.0 (see LICENSE-CONTENT).
+-->
+<title>STEMgu (placeholder art)</title>
+<g fill="#1d2b3a"><rect x="4" y="0" width="8" height="1"/><rect x="5" y="1" width="1" height="1"/><rect x="10" y="1" width="1" height="1"/><rect x="5" y="2" width="1" height="1"/><rect x="10" y="2" width="1" height="1"/><rect x="4" y="3" width="1" height="1"/><rect x="11" y="3" width="1" height="1"/><rect x="2" y="4" width="2" height="1"/><rect x="12" y="4" width="2" height="1"/><rect x="1" y="5" width="1" height="1"/><rect x="14" y="5" width="1" height="1"/><rect x="0" y="6" width="1" height="1"/><rect x="15" y="6" width="1" height="1"/><rect x="0" y="7" width="1" height="1"/><rect x="15" y="7" width="1" height="1"/><rect x="0" y="8" width="1" height="1"/><rect x="15" y="8" width="1" height="1"/><rect x="0" y="9" width="1" height="1"/><rect x="15" y="9" width="1" height="1"/><rect x="0" y="10" width="1" height="1"/><rect x="15" y="10" width="1" height="1"/><rect x="0" y="11" width="1" height="1"/><rect x="15" y="11" width="1" height="1"/><rect x="1" y="12" width="1" height="1"/><rect x="14" y="12" width="1" height="1"/><rect x="2" y="13" width="2" height="1"/><rect x="12" y="13" width="2" height="1"/><rect x="4" y="14" width="8" height="1"/><rect x="3" y="15" width="1" height="1"/><rect x="6" y="15" width="1" height="1"/><rect x="9" y="15" width="1" height="1"/><rect x="12" y="15" width="1" height="1"/></g>
+<g fill="#e3f6fb"><rect x="6" y="1" width="1" height="1"/><rect x="8" y="1" width="2" height="1"/><rect x="6" y="2" width="1" height="1"/><rect x="8" y="2" width="1" height="1"/><rect x="5" y="3" width="2" height="1"/><rect x="8" y="3" width="3" height="1"/><rect x="4" y="4" width="1" height="1"/><rect x="6" y="4" width="2" height="1"/><rect x="9" y="4" width="3" height="1"/></g>
+<g fill="#ffffff"><rect x="7" y="1" width="1" height="1"/><rect x="7" y="2" width="1" height="1"/><rect x="7" y="3" width="1" height="1"/><rect x="5" y="4" width="1" height="1"/></g>
+<g fill="#9fdcec"><rect x="9" y="2" width="1" height="1"/><rect x="8" y="4" width="1" height="1"/></g>
+<g fill="#7fe0c8"><rect x="2" y="5" width="12" height="1"/></g>
+<g fill="#2fb39a"><rect x="1" y="6" width="14" height="1"/><rect x="1" y="7" width="3" height="1"/><rect x="6" y="7" width="4" height="1"/><rect x="12" y="7" width="3" height="1"/><rect x="1" y="8" width="3" height="1"/><rect x="6" y="8" width="4" height="1"/><rect x="12" y="8" width="3" height="1"/><rect x="1" y="9" width="3" height="1"/><rect x="6" y="9" width="4" height="1"/><rect x="12" y="9" width="3" height="1"/><rect x="1" y="10" width="1" height="1"/><rect x="4" y="10" width="2" height="1"/><rect x="7" y="10" width="2" height="1"/><rect x="10" y="10" width="2" height="1"/><rect x="14" y="10" width="1" height="1"/><rect x="2" y="11" width="5" height="1"/><rect x="9" y="11" width="5" height="1"/><rect x="4" y="12" width="8" height="1"/></g>
+<g fill="#ffffff"><rect x="4" y="7" width="1" height="1"/><rect x="10" y="7" width="1" height="1"/></g>
+<g fill="#1d2b3a"><rect x="5" y="7" width="1" height="1"/><rect x="11" y="7" width="1" height="1"/><rect x="4" y="8" width="2" height="1"/><rect x="10" y="8" width="2" height="1"/><rect x="4" y="9" width="2" height="1"/><rect x="10" y="9" width="2" height="1"/></g>
+<g fill="#ff8fa8"><rect x="2" y="10" width="2" height="1"/><rect x="12" y="10" width="2" height="1"/></g>
+<g fill="#1d2b3a"><rect x="6" y="10" width="1" height="1"/><rect x="9" y="10" width="1" height="1"/><rect x="7" y="11" width="2" height="1"/></g>
+<g fill="#1e8c78"><rect x="1" y="11" width="1" height="1"/><rect x="14" y="11" width="1" height="1"/><rect x="2" y="12" width="2" height="1"/><rect x="12" y="12" width="2" height="1"/><rect x="4" y="13" width="8" height="1"/><rect x="4" y="15" width="2" height="1"/><rect x="10" y="15" width="2" height="1"/></g>
+</svg>

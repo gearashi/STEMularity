@@ -1,0 +1,101 @@
+{
+  "$schema": "../schema/problem.schema.json",
+  "id": "silent-comet-drift",
+  "name": "Silent Comet Drift",
+  "field": "astronomy",
+  "category": "Celestial mechanics",
+  "tags": ["comets", "orbit-determination", "non-gravitational-forces", "sample-data"],
+  "status": "open",
+  "summary": "Made-up sample problem. The fictional Silent Comet shows no visible tail or gas, yet on each orbit it reaches its closest point to the Sun about 90 minutes later than gravity alone predicts. Rechecks of old observations show that the drift is real. Candidate explanations include gas jets too faint to see, a small unseen companion and the push from uneven heat radiation; none is agreed, and more than one may play a part.",
+  "ai_effort": "medium",
+  "ratings": {
+    "work_left": 4,
+    "significance": 2
+  },
+  "progress": [
+    {
+      "id": "drift-measured",
+      "title": "Drift found in positions from three returns",
+      "description": "Positions from three returns between 2002 and 2019 showed the comet reaching its closest point to the Sun about 90 minutes later each time than gravity alone predicts.",
+      "status": "done",
+      "by": [
+        { "name": "Nell Exampleby", "kind": "person" },
+        { "name": "Sample Comet Watchers", "kind": "group" }
+      ],
+      "date": "2019-11",
+      "links": [{ "title": "Orbit fit and leftover differences (sample link)", "url": "https://example.org/silent-comet/orbit-fit" }]
+    },
+    {
+      "id": "old-data-recheck",
+      "title": "Old position measurements rechecked for errors",
+      "description": "An AI system re-measured the comet's position in 412 archived images, and a person checked 40 of them by hand. The drift stayed the same, so it is not a measurement error.",
+      "status": "done",
+      "by": [
+        { "name": "Nell Exampleby", "kind": "person" },
+        { "name": "Example Astrometry Agent", "kind": "ai" }
+      ],
+      "date": "2021-04",
+      "links": [{ "title": "Re-measured positions (sample link)", "url": "https://example.org/silent-comet/remeasured-positions" }]
+    },
+    {
+      "id": "unseen-companion",
+      "title": "A small unseen companion causes the drift",
+      "description": "A preprint argued that a companion about 1 km across could cause the drift. Others reply that a companion would make the comet wobble around its path rather than drift steadily, and that none shows up in the deepest images.",
+      "status": "disputed",
+      "by": [{ "name": "Jonas Demoberg", "kind": "person" }],
+      "date": "2023-05",
+      "links": [
+        { "title": "Companion preprint (sample link)", "url": "https://example.org/silent-comet/companion-preprint" },
+        { "title": "Replies and discussion (sample link)", "url": "https://example.org/silent-comet/companion-discussion" }
+      ]
+    },
+    {
+      "id": "faint-gas-model",
+      "title": "Model gas jets too faint to see",
+      "description": "Fitting the drift with a weak, steady jet of gas from the sunlit side. Early fits need less gas than current telescopes can detect, so the idea is hard to rule out.",
+      "status": "in-progress",
+      "by": [
+        { "name": "Sample Comet Watchers", "kind": "group" },
+        { "name": "Example Orbit Agent", "kind": "ai" }
+      ],
+      "date": "2025-09",
+      "links": [{ "title": "Work-in-progress notes (sample link)", "url": "https://example.org/silent-comet/faint-gas-notes" }]
+    },
+    {
+      "id": "heat-push-estimate",
+      "title": "Estimate the push from uneven heat radiation",
+      "description": "A spinning nucleus that heats unevenly gives off more heat on one side, which pushes it very slightly. A quick estimate from the nucleus size and spin would show whether this effect alone could explain the drift.",
+      "status": "not-started"
+    },
+    {
+      "id": "next-return-search",
+      "title": "Search for faint gas at the next return",
+      "description": "Deep images and spectra near the comet's next closest approach to the Sun could detect faint gas directly, or rule it out.",
+      "status": "not-started"
+    }
+  ],
+  "sources": [
+    {
+      "title": "A quiet comet that keeps arriving late (sample source)",
+      "url": "https://example.org/papers/silent-comet-drift",
+      "kind": "paper",
+      "authors": ["Nell Exampleby"],
+      "year": 2020
+    },
+    {
+      "title": "Silent Comet position measurements, 2002-2019 (sample source)",
+      "url": "https://example.org/datasets/silent-comet-positions",
+      "kind": "dataset",
+      "year": 2021
+    },
+    {
+      "title": "Could an unseen companion explain the Silent Comet drift? (sample source)",
+      "url": "https://example.org/preprints/silent-comet-companion",
+      "kind": "preprint",
+      "authors": ["Jonas Demoberg"],
+      "year": 2023
+    }
+  ],
+  "sample": true,
+  "updated": "2026-10-22"
+}

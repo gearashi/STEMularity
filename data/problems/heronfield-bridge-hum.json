@@ -1,0 +1,88 @@
+{
+  "$schema": "../schema/problem.schema.json",
+  "id": "heronfield-bridge-hum",
+  "name": "Heronfield Bridge Hum",
+  "aliases": ["The Heronfield hum"],
+  "field": "engineering",
+  "category": "Structural dynamics",
+  "tags": ["vibration", "structural-health-monitoring", "sensor-artifacts", "footbridges", "sample-data"],
+  "status": "resolved",
+  "summary": "Made-up sample problem. The vibration sensor on the fictional Heronfield footbridge recorded a steady 23 Hz hum on windy days, and the question asked what made the deck vibrate at that frequency. The deck never did: the hum came from a loose sensor bracket that rang in the wind, so it was a sensor artifact. The question was closed as ill-posed, because it rested on a false premise.",
+  "ai_effort": "low",
+  "progress": [
+    {
+      "id": "hum-reported",
+      "title": "Hum found in the monitoring data and the question posed",
+      "description": "The bridge's only vibration sensor, at the middle of the span, showed a steady 23 Hz signal whenever the wind was strong. The question was posed as: what makes the deck vibrate at 23 Hz?",
+      "status": "done",
+      "by": [{ "name": "Sample Bridge Monitoring Team", "kind": "group" }],
+      "date": "2023-04",
+      "links": [{ "title": "First report of the hum (sample link)", "url": "https://example.org/heronfield/first-report" }]
+    },
+    {
+      "id": "deck-model",
+      "title": "Computer model of the deck's vibration modes",
+      "description": "A detailed model found no way for the deck to vibrate within 5 Hz of 23 Hz. This was the first hint that the premise was wrong, but at the time it was put down to errors in the model.",
+      "status": "done",
+      "by": [{ "name": "Ivo Testerby", "kind": "person" }],
+      "date": "2023-06",
+      "links": [{ "title": "Model files and results (sample link)", "url": "https://example.org/heronfield/deck-model" }]
+    },
+    {
+      "id": "damper-trial",
+      "title": "Temporary damper tuned to 23 Hz",
+      "description": "A temporary damper tuned to 23 Hz was fitted to the deck. It made no difference to the hum, because the hum never came from the deck. Before damping a structure to remove a new signal, first check that a second sensor sees it too.",
+      "status": "dead-end",
+      "by": [{ "name": "Sample Bridge Monitoring Team", "kind": "group" }],
+      "date": "2023-10",
+      "links": [{ "title": "Damper trial report (sample link)", "url": "https://example.org/heronfield/damper-trial" }]
+    },
+    {
+      "id": "pattern-analysis",
+      "title": "Two years of sensor records searched for patterns",
+      "description": "An AI analysis of the records, checked by a person, found that the hum kept exactly the same frequency when crowds crossed the bridge. A real deck vibration would drop slightly under the extra weight, so the hum was probably not in the deck.",
+      "status": "done",
+      "by": [
+        { "name": "Ivo Testerby", "kind": "person" },
+        { "name": "Example Signal Agent", "kind": "ai" }
+      ],
+      "date": "2024-02",
+      "links": [{ "title": "Analysis notebook (sample link)", "url": "https://example.org/heronfield/pattern-analysis" }]
+    },
+    {
+      "id": "bracket-found",
+      "title": "Hum traced to a loose sensor bracket",
+      "description": "A second sensor fitted next to the first never recorded the hum. An inspection then found that the first sensor's bracket was loose and rang in strong wind. Once the bracket was tightened, the hum disappeared.",
+      "status": "done",
+      "by": [{ "name": "Sample Bridge Monitoring Team", "kind": "group" }],
+      "date": "2024-03-12",
+      "links": [{ "title": "Inspection report (sample link)", "url": "https://example.org/heronfield/inspection" }]
+    },
+    {
+      "id": "question-closed",
+      "title": "Question closed as ill-posed",
+      "description": "The deck never vibrated at 23 Hz, so the question as posed has no answer: the hum was a sensor artifact. The monitoring team now confirms any new signal on a second sensor before investigating it.",
+      "status": "done",
+      "by": [{ "name": "Sample Bridge Monitoring Team", "kind": "group" }],
+      "date": "2024-06",
+      "links": [{ "title": "Closing note (sample link)", "url": "https://example.org/heronfield/closing-note" }]
+    }
+  ],
+  "sources": [
+    {
+      "title": "Heronfield footbridge vibration records, 2022-2024 (sample source)",
+      "url": "https://example.org/datasets/heronfield-vibration",
+      "kind": "dataset",
+      "year": 2024
+    },
+    {
+      "title": "The hum that was not there: a case study in sensor artifacts (sample source)",
+      "url": "https://example.org/articles/heronfield-hum",
+      "kind": "article",
+      "authors": ["Ivo Testerby"],
+      "year": 2024
+    }
+  ],
+  "sample": true,
+  "updated": "2026-02-10"
+}

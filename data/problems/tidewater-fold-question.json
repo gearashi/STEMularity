@@ -1,0 +1,98 @@
+{
+  "$schema": "../schema/problem.schema.json",
+  "id": "tidewater-fold-question",
+  "name": "Tidewater Protein Fold Question",
+  "aliases": ["Tidewater protein structure"],
+  "field": "biology",
+  "category": "Structural biology",
+  "tags": ["protein-structure", "protein-folding", "marine-biology", "sample-data"],
+  "status": "solved",
+  "summary": "Made-up sample problem. Tidewater protein is a fictional protein from a made-up tidal-zone snail, where it helps cells survive drying out at every low tide. Its sequence matched no known protein family, so nobody could say what three-dimensional shape (fold) it takes. A crystal structure in 2022 showed an unusual twisted-sheet fold around a water-holding pocket, and a second lab confirmed the same fold in 2023 with a different method.",
+  "ai_effort": "medium",
+  "progress": [
+    {
+      "id": "protein-isolated",
+      "title": "Protein isolated and its sequence read",
+      "description": "The protein was purified from the snail's foot and its sequence of 212 amino acids was read. It matched no known protein family, which is what made the fold an open question.",
+      "status": "done",
+      "by": [{ "name": "Example Tidepool Lab", "kind": "group" }],
+      "date": "2017-06",
+      "links": [{ "title": "Sequence record (sample link)", "url": "https://example.org/tidewater/sequence" }]
+    },
+    {
+      "id": "fold-prediction",
+      "title": "Fold predicted by computer",
+      "description": "An AI structure model, with its output checked by hand, predicted a twisted sheet curled around a pocket. Confidence was low because no similar proteins were known, so the prediction could not settle the question on its own. It also flagged a floppy tail at one end of the protein.",
+      "status": "done",
+      "by": [
+        { "name": "Pia Sampleford", "kind": "person" },
+        { "name": "Example Structure Model", "kind": "ai" }
+      ],
+      "date": "2020-09",
+      "links": [{ "title": "Prediction and confidence scores (sample link)", "url": "https://example.org/tidewater/prediction" }]
+    },
+    {
+      "id": "full-length-crystals",
+      "title": "Crystal trials with the full-length protein",
+      "description": "Two years of trials with the full-length protein produced no usable crystals. The floppy tail stops crystals from forming. Do not repeat this: trim the tail first.",
+      "status": "dead-end",
+      "by": [{ "name": "Example Tidepool Lab", "kind": "group" }],
+      "date": "2021-02",
+      "links": [{ "title": "Crystal trial log (sample link)", "url": "https://example.org/tidewater/crystal-trials" }]
+    },
+    {
+      "id": "crystal-structure",
+      "title": "Fold determined by X-ray crystallography",
+      "description": "With the tail trimmed off, the protein formed good crystals. The structure shows an eight-strand twisted sheet curled around a pocket that holds water, close to the 2020 prediction. This answers the question as posed.",
+      "status": "done",
+      "by": [
+        { "name": "Kai Examplewood", "kind": "person" },
+        { "name": "Example Tidepool Lab", "kind": "group" }
+      ],
+      "date": "2022-03-15",
+      "links": [
+        { "title": "Structure write-up (sample link)", "url": "https://example.org/tidewater/structure" },
+        { "title": "Atomic coordinates (sample link)", "url": "https://example.org/tidewater/coordinates" }
+      ]
+    },
+    {
+      "id": "independent-confirmation",
+      "title": "Fold confirmed by a second lab",
+      "description": "A second lab measured the protein in solution with a different method and found the same fold. So the shape is not an effect of packing the protein into a crystal.",
+      "status": "done",
+      "by": [{ "name": "Sample Coastal Biology Group", "kind": "group" }],
+      "date": "2023-01",
+      "links": [{ "title": "Confirmation report (sample link)", "url": "https://example.org/tidewater/confirmation" }]
+    },
+    {
+      "id": "dry-state-follow-up",
+      "title": "Follow-up: the fold when the protein dries out",
+      "description": "Not needed for the answer as posed. A natural next step is to find out whether the water-holding pocket keeps its shape when the protein dries out at low tide.",
+      "status": "not-started"
+    }
+  ],
+  "sources": [
+    {
+      "title": "An unusual fold from a tidal-zone snail (sample source)",
+      "url": "https://example.org/papers/tidewater-fold",
+      "kind": "paper",
+      "authors": ["Kai Examplewood", "Pia Sampleford"],
+      "year": 2022
+    },
+    {
+      "title": "Tidewater protein structure data (sample source)",
+      "url": "https://example.org/datasets/tidewater-structure",
+      "kind": "dataset",
+      "year": 2022
+    },
+    {
+      "title": "The tidewater fold in solution: an independent check (sample source)",
+      "url": "https://example.org/papers/tidewater-confirmation",
+      "kind": "paper",
+      "authors": ["Sample Coastal Biology Group"],
+      "year": 2023
+    }
+  ],
+  "sample": true,
+  "updated": "2026-05-20"
+}

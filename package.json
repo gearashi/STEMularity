@@ -1,0 +1,26 @@
+{
+  "name": "stemularity",
+  "version": "0.1.0",
+  "description": "An open index of open, unsolved, solved and resolved STEM problems, each with a checkpoint-style progress map.",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gearashi/STEMularity.git"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "validate": "node scripts/validate.mjs",
+    "build": "node site/build.mjs",
+    "preview": "node site/build.mjs && node site/serve.mjs",
+    "test": "node --test",
+    "check": "npm run validate && npm test && npm run build"
+  },
+  "dependencies": {
+    "ajv": "^8.18.0",
+    "ajv-formats": "^3.0.1"
+  }
+}

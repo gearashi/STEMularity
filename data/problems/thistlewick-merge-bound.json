@@ -1,0 +1,102 @@
+{
+  "$schema": "../schema/problem.schema.json",
+  "id": "thistlewick-merge-bound",
+  "name": "Thistlewick Merge Bound",
+  "aliases": ["The 1.5-write merge question"],
+  "field": "computer-science",
+  "category": "Algorithms",
+  "tags": ["merging", "memory-models", "lower-bounds", "sample-data"],
+  "status": "solved",
+  "summary": "Made-up sample problem. Thistlewick memory is a fictional computer model in which reads are free but every write wears the memory out, so an algorithm's cost is the number of writes it makes. A 2013 proof showed that merging two sorted lists in place needs at least about 1.5 writes per item in the worst case, but the best known method used 2. In 2025 an algorithm that meets this bound was found and checked independently, which solved the problem as posed.",
+  "ai_effort": "high",
+  "progress": [
+    {
+      "id": "model-defined",
+      "title": "Model defined, with a simple merge using 2 writes per item",
+      "description": "The model and the question were stated: merge two sorted lists stored side by side so that the result fills the same cells, using only a few spare cells. The same paper gave a simple method that makes 2 writes per item.",
+      "status": "done",
+      "by": [{ "name": "Lin Demoford", "kind": "person" }],
+      "date": "2009-11",
+      "links": [{ "title": "Paper defining the model (sample link)", "url": "https://example.org/thistlewick/model" }]
+    },
+    {
+      "id": "lower-bound",
+      "title": "Lower bound of 1.5 writes per item",
+      "description": "A counting argument showed that on some inputs any in-place merge must make at least about 1.5 writes per item. Nobody knew whether an algorithm could reach this bound.",
+      "status": "done",
+      "by": [{ "name": "Ivo Stubworth", "kind": "person" }],
+      "date": "2013-06",
+      "links": [{ "title": "Lower-bound proof (sample link)", "url": "https://example.org/thistlewick/lower-bound" }]
+    },
+    {
+      "id": "block-rotation",
+      "title": "Block-rotation merge attempt",
+      "description": "Merging by rotating whole blocks of items into place looked promising, but on some inputs it always needs 2 writes per item. Do not retry this route without a new way to avoid the extra rotations.",
+      "status": "dead-end",
+      "by": [{ "name": "Sample Sorting Group", "kind": "group" }],
+      "date": "2018-02",
+      "links": [{ "title": "Why block rotation stalls at 2 writes per item (sample link)", "url": "https://example.org/thistlewick/block-rotation-notes" }]
+    },
+    {
+      "id": "matching-algorithm",
+      "title": "Algorithm meeting the 1.5-write bound",
+      "description": "A new merge moves items into place in small batches, using the spare cells as a staging area. It makes at most 1.5 writes per item, plus a few extra writes in total, which matches the lower bound and answers the question as posed. An AI search over batch orders found the key step, and the proof was written by hand.",
+      "status": "done",
+      "by": [
+        { "name": "Noor Mockwell", "kind": "person" },
+        { "name": "Sample Search Agent", "kind": "ai" }
+      ],
+      "date": "2025-04-08",
+      "links": [
+        { "title": "Algorithm write-up (sample link)", "url": "https://example.org/thistlewick/algorithm" },
+        { "title": "Reference code (sample link)", "url": "https://example.org/thistlewick/code" }
+      ]
+    },
+    {
+      "id": "independent-check",
+      "title": "Independent check of the algorithm and its write count",
+      "description": "A second team re-derived the write count by hand and tested the reference code on billions of random and worst-case inputs. They found two typos in the write-up and no errors in the method.",
+      "status": "done",
+      "by": [{ "name": "Example Algorithms Reading Group", "kind": "group" }],
+      "date": "2025-09",
+      "links": [{ "title": "Check report and test inputs (sample link)", "url": "https://example.org/thistlewick/check-report" }]
+    },
+    {
+      "id": "formal-proof",
+      "title": "Machine-checked proof of the write count",
+      "description": "Formalize the algorithm and its write count in a proof assistant. The batch step is done; the worst-case accounting is still being written.",
+      "status": "in-progress",
+      "by": [
+        { "name": "Tess Fixture", "kind": "person" },
+        { "name": "Example Proof Assistant", "kind": "ai" }
+      ],
+      "date": "2026-02",
+      "links": [{ "title": "Formal proof so far (sample link)", "url": "https://example.org/thistlewick/formal-proof" }]
+    }
+  ],
+  "sources": [
+    {
+      "title": "Merging in thistlewick memory (sample source)",
+      "url": "https://example.org/papers/thistlewick-memory",
+      "kind": "paper",
+      "authors": ["Lin Demoford"],
+      "year": 2009
+    },
+    {
+      "title": "A write lower bound for in-place merging in thistlewick memory (sample source)",
+      "url": "https://example.org/papers/thistlewick-lower-bound",
+      "kind": "paper",
+      "authors": ["Ivo Stubworth"],
+      "year": 2013
+    },
+    {
+      "title": "Merging in place with 1.5 writes per item (sample source)",
+      "url": "https://example.org/preprints/thistlewick-merge",
+      "kind": "preprint",
+      "authors": ["Noor Mockwell"],
+      "year": 2025
+    }
+  ],
+  "sample": true,
+  "updated": "2026-10-14"
+}

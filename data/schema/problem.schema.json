@@ -1,0 +1,253 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/gearashi/STEMularity/main/data/schema/problem.schema.json",
+  "title": "STEMularity problem",
+  "description": "One STEM problem in the STEMularity index, stored as data/problems/<id>.json. Every fixed value used here (each status, field, AI effort level, rating, checkpoint status, contributor kind and source kind) has a label and a description in vocabulary.json, next to this file.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "name", "field", "category", "status", "summary", "ai_effort", "progress", "sources"],
+  "properties": {
+    "$schema": {
+      "description": "Optional pointer to this schema so editors can validate the file, normally \"../schema/problem.schema.json\".",
+      "type": "string",
+      "maxLength": 200
+    },
+    "id": {
+      "description": "Stable identifier in lowercase kebab-case. Must match the file name without .json. Never change it once published: URLs and links depend on it. Names that Windows reserves for devices (con, prn, aux, nul, com0-com9, lpt0-lpt9) are not allowed.",
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 80,
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+      "not": { "type": "string", "pattern": "^(con|prn|aux|nul|com[0-9]|lpt[0-9])$" }
+    },
+    "name": {
+      "description": "Human-readable name of the problem.",
+      "$ref": "#/$defs/line",
+      "minLength": 3,
+      "maxLength": 120
+    },
+    "aliases": {
+      "description": "Other names the problem is known by.",
+      "type": "array",
+      "uniqueItems": true,
+      "maxItems": 20,
+      "items": { "$ref": "#/$defs/line", "minLength": 1, "maxLength": 120 }
+    },
+    "field": {
+      "description": "Broad STEM field, used for filtering. See vocabulary.json#/field.",
+      "enum": ["mathematics", "computer-science", "physics", "astronomy", "chemistry", "biology", "medicine", "earth-science", "engineering"]
+    },
+    "category": {
+      "description": "Subfield or topic within the field, in plain words (for example \"Number theory\"). Used for sorting and display.",
+      "$ref": "#/$defs/line",
+      "minLength": 2,
+      "maxLength": 80
+    },
+    "tags": {
+      "description": "Optional lowercase kebab-case keywords.",
+      "type": "array",
+      "uniqueItems": true,
+      "maxItems": 30,
+      "items": { "type": "string", "minLength": 2, "maxLength": 40, "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" }
+    },
+    "status": {
+      "description": "Where the problem stands. open = not settled and open-ended; unsolved = precisely stated, no accepted answer yet; solved = answered as posed; resolved = closed without an answer as posed (impossible, independent, ill-posed or superseded). See vocabulary.json#/status.",
+      "enum": ["open", "unsolved", "solved", "resolved"]
+    },
+    "summary": {
+      "description": "Plain-language summary of the problem and where it stands, written in your own words. Never paste text from papers.",
+      "$ref": "#/$defs/text",
+      "minLength": 40,
+      "maxLength": 2000
+    },
+    "ai_effort": {
+      "description": "Recommended AI reasoning effort for working on this problem now, from low to max: for its first open checkpoint (one that is in progress, not started or disputed), or, if none is open, for checking and building on the recorded work. See vocabulary.json#/ai_effort.",
+      "enum": ["low", "medium", "high", "max"]
+    },
+    "ratings": {
+      "description": "Required when status is open or unsolved, and not allowed otherwise.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["work_left", "significance"],
+      "properties": {
+        "work_left": {
+          "description": "How much work is left before the problem is fully solved: 1 = almost there, 10 = barely begun.",
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10
+        },
+        "significance": {
+          "description": "Real-world significance if fully solved: 1 = mostly curiosity value, 10 = would change everyday life or technology.",
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10
+        }
+      }
+    },
+    "progress": {
+      "description": "The progress map: an ordered list of checkpoints from the first step to a full solution. Order is the logical route through the problem, not necessarily chronological.",
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 500,
+      "items": { "$ref": "#/$defs/checkpoint" }
+    },
+    "sources": {
+      "description": "Links to papers, articles, datasets and other sources. Link only: never commit copies of copyrighted papers.",
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 100,
+      "items": { "$ref": "#/$defs/source" }
+    },
+    "sample": {
+      "description": "true marks made-up sample data used while the project is being built. Real entries leave it out.",
+      "type": "boolean"
+    },
+    "updated": {
+      "description": "Date this entry was last reviewed or updated.",
+      "$ref": "#/$defs/date"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "required": ["status"],
+        "properties": { "status": { "enum": ["open", "unsolved"] } }
+      },
+      "then": { "required": ["ratings"] }
+    },
+    {
+      "if": {
+        "required": ["status"],
+        "properties": { "status": { "enum": ["solved", "resolved"] } }
+      },
+      "then": { "properties": { "ratings": false } }
+    }
+  ],
+  "$defs": {
+    "date": {
+      "description": "A date as YYYY, YYYY-MM or YYYY-MM-DD, for years 0001 to 9999 CE. Give only the year or month when that is all that is known. Years always have four digits: 430 CE is 0430. A year BCE is written -YYYY, year only: -0430 is 430 BCE. There is no year 0, so 0000 and -0000 are errors. For a date known only roughly, give the best known year and say \"around\" in the checkpoint's description.",
+      "type": "string",
+      "pattern": "^(-[0-9]{4}|[0-9]{4}(-(0[1-9]|1[0-2])(-(0[1-9]|[12][0-9]|3[01]))?)?)$"
+    },
+    "url": {
+      "description": "Absolute http(s) URL with a host name.",
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https?://[^\\s/?#]+",
+      "maxLength": 2000
+    },
+    "line": {
+      "description": "One line of text: no line breaks (including U+2028 and U+2029), no other control characters or bidirectional overrides, and no space at the start or end. An empty string is left to minLength.",
+      "type": "string",
+      "pattern": "^(?:[^\\s\\u0000-\\u001f\\u007f-\\u009f\\u202a-\\u202e\\u2066-\\u2069](?:[^\\u0000-\\u001f\\u007f-\\u009f\\u2028\\u2029\\u202a-\\u202e\\u2066-\\u2069]*[^\\s\\u0000-\\u001f\\u007f-\\u009f\\u202a-\\u202e\\u2066-\\u2069])?)?$"
+    },
+    "text": {
+      "description": "Text that may run over several lines: line breaks (\\n or \\r\\n) and tabs are allowed inside it, but no other control characters, U+2028, U+2029 or bidirectional overrides, and no space or blank line at the start or end. An empty string is left to minLength.",
+      "type": "string",
+      "pattern": "^(?:[^\\s\\u0000-\\u001f\\u007f-\\u009f\\u202a-\\u202e\\u2066-\\u2069](?:[^\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f-\\u009f\\u2028\\u2029\\u202a-\\u202e\\u2066-\\u2069]*[^\\s\\u0000-\\u001f\\u007f-\\u009f\\u202a-\\u202e\\u2066-\\u2069])?)?$"
+    },
+    "link": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["title", "url"],
+      "properties": {
+        "title": { "$ref": "#/$defs/line", "minLength": 1, "maxLength": 200 },
+        "url": { "$ref": "#/$defs/url" }
+      }
+    },
+    "contributor": {
+      "description": "Who did the work. List people, groups and AI systems separately when they worked together.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "kind"],
+      "properties": {
+        "name": { "$ref": "#/$defs/line", "minLength": 1, "maxLength": 120 },
+        "kind": {
+          "description": "See vocabulary.json#/contributor_kind.",
+          "enum": ["person", "group", "ai"]
+        },
+        "url": { "$ref": "#/$defs/url" }
+      }
+    },
+    "checkpoint": {
+      "description": "One step on the progress map. A not-started checkpoint has no contributors or date; in-progress needs contributors; done, disputed and dead-end need contributors and a date.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title", "status"],
+      "properties": {
+        "id": {
+          "description": "Identifier unique within this problem, in lowercase kebab-case. Keep it stable: it anchors links to the checkpoint.",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 60,
+          "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+        },
+        "title": { "$ref": "#/$defs/line", "minLength": 3, "maxLength": 160 },
+        "description": { "$ref": "#/$defs/text", "minLength": 1, "maxLength": 2000 },
+        "status": {
+          "description": "See vocabulary.json#/checkpoint_status.",
+          "enum": ["done", "in-progress", "not-started", "disputed", "dead-end"]
+        },
+        "by": {
+          "description": "Who did (or is doing) this checkpoint.",
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 50,
+          "items": { "$ref": "#/$defs/contributor" }
+        },
+        "date": {
+          "description": "When the checkpoint was reached (done), claimed (disputed), abandoned (dead-end) or started (in-progress).",
+          "$ref": "#/$defs/date"
+        },
+        "links": {
+          "description": "Links to the work itself: write-ups, code, discussions. Link only.",
+          "type": "array",
+          "maxItems": 50,
+          "items": { "$ref": "#/$defs/link" }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "required": ["status"],
+            "properties": { "status": { "const": "not-started" } }
+          },
+          "then": { "properties": { "by": false, "date": false } },
+          "else": { "required": ["by"] }
+        },
+        {
+          "if": {
+            "required": ["status"],
+            "properties": { "status": { "enum": ["done", "disputed", "dead-end"] } }
+          },
+          "then": { "required": ["date"] }
+        }
+      ]
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["title", "url", "kind"],
+      "properties": {
+        "title": { "$ref": "#/$defs/line", "minLength": 1, "maxLength": 300 },
+        "url": { "$ref": "#/$defs/url" },
+        "kind": {
+          "description": "See vocabulary.json#/source_kind.",
+          "enum": ["paper", "preprint", "book", "article", "website", "dataset", "code", "video", "other"]
+        },
+        "authors": {
+          "type": "array",
+          "maxItems": 50,
+          "items": { "$ref": "#/$defs/line", "minLength": 1, "maxLength": 120 }
+        },
+        "year": {
+          "description": "Year the source was published. A negative year is BCE: -300 is 300 BCE. There is no year 0.",
+          "type": "integer",
+          "minimum": -9999,
+          "maximum": 9999,
+          "not": { "const": 0 }
+        }
+      }
+    }
+  }
+}

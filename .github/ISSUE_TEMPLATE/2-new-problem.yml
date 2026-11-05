@@ -1,0 +1,133 @@
+name: Suggest a new problem
+description: Propose an open, unsolved, solved or resolved STEM problem for the index.
+title: "[New problem] "
+labels: ["new-problem"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Suggest a problem for the index. Someone checks that it isn't listed yet, then adds it with a first progress map built from what you write here. You can also add it yourself with a pull request: see [CONTRIBUTING.md](https://github.com/gearashi/STEMularity/blob/main/CONTRIBUTING.md).
+
+        **Link, don't copy.** Link to papers and other sources. Don't attach copies of papers or other files you don't hold the rights to.
+  - type: input
+    id: name
+    attributes:
+      label: Name of the problem
+      placeholder: The quiet river conjecture
+    validations:
+      required: true
+  - type: input
+    id: other-names
+    attributes:
+      label: Other names
+      description: Other names the problem is known by, if any.
+  - type: dropdown
+    id: field
+    attributes:
+      label: Field
+      options:
+        - "Mathematics"
+        - "Computer science"
+        - "Physics"
+        - "Astronomy"
+        - "Chemistry"
+        - "Biology"
+        - "Medicine"
+        - "Earth science"
+        - "Engineering"
+    validations:
+      required: true
+  - type: input
+    id: category
+    attributes:
+      label: Category
+      description: The subfield or topic within the field.
+      placeholder: Number theory
+  - type: dropdown
+    id: status
+    attributes:
+      label: Status
+      description: Where the problem stands. [How it works](https://github.com/gearashi/STEMularity/blob/main/README.md#how-it-works) explains each status.
+      options:
+        - "Open: not settled, and open-ended"
+        - "Unsolved: precisely stated, but no accepted answer yet"
+        - "Solved: answered as posed"
+        - "Resolved: closed without an answer as posed"
+        - "Not sure"
+    validations:
+      required: true
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: In your own words, what the problem asks and where it stands. Don't paste text from papers.
+    validations:
+      required: true
+  - type: textarea
+    id: progress
+    attributes:
+      label: Progress so far
+      description: The main results, failed attempts and next steps you know of, with links and dates where you can. These become the first checkpoints of the progress map.
+  - type: textarea
+    id: sources
+    attributes:
+      label: Sources
+      description: One link per line, to papers, articles, data and other sources about the problem. Each link starts with http:// or https://.
+    validations:
+      required: true
+  - type: dropdown
+    id: work-left
+    attributes:
+      label: Work left (for open and unsolved problems)
+      description: How much work is left before the problem is fully solved. 1 = almost there, 10 = barely begun.
+      options:
+        - "1"
+        - "2"
+        - "3"
+        - "4"
+        - "5"
+        - "6"
+        - "7"
+        - "8"
+        - "9"
+        - "10"
+        - "Not sure"
+  - type: dropdown
+    id: significance
+    attributes:
+      label: Significance if fully solved (for open and unsolved problems)
+      description: 1 = mostly curiosity value, 10 = would change everyday life or technology.
+      options:
+        - "1"
+        - "2"
+        - "3"
+        - "4"
+        - "5"
+        - "6"
+        - "7"
+        - "8"
+        - "9"
+        - "10"
+        - "Not sure"
+  - type: dropdown
+    id: ai-effort
+    attributes:
+      label: Recommended AI effort
+      description: How much AI reasoning effort working on the problem needs now, for its next open step, or, if none is open, for checking and building on the recorded work.
+      options:
+        - "Low"
+        - "Medium"
+        - "High"
+        - "Max"
+        - "Not sure"
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Before you submit
+      options:
+        - label: I searched the index and the open issues, and this problem isn't there yet.
+          required: true
+        - label: I wrote this in my own words, and I linked to sources instead of attaching copies of papers.
+          required: true
+        - label: I agree that what I write here can be added to STEMularity under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), and I follow the [Open-Knowledge Pledge](https://github.com/gearashi/STEMularity/blob/main/README.md#the-open-knowledge-pledge).
+          required: true

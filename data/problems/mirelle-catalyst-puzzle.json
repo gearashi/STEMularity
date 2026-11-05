@@ -1,0 +1,105 @@
+{
+  "$schema": "../schema/problem.schema.json",
+  "id": "mirelle-catalyst-puzzle",
+  "name": "Mirelle Catalyst Puzzle",
+  "aliases": ["The 41-degree switch"],
+  "field": "chemistry",
+  "category": "Catalysis",
+  "tags": ["catalysis", "reaction-kinetics", "surface-chemistry", "sample-data"],
+  "status": "unsolved",
+  "summary": "Made-up sample problem. Mirelle catalyst is a fictional layered oxide powder that makes a test dye break down in water about 30 times faster below 41 °C, but has no effect at all above that temperature. The puzzle asks what physical change at 41 °C switches the speed-up off; the answer could help design catalysts that save energy by working at low temperatures. A change in the catalyst's structure has been ruled out, and a model based on a thin layer of bound water is disputed and now being tested.",
+  "ai_effort": "medium",
+  "ratings": {
+    "work_left": 5,
+    "significance": 7
+  },
+  "progress": [
+    {
+      "id": "problem-posed",
+      "title": "Temperature switch measured and the question stated",
+      "description": "Repeated runs showed the speed-up vanishing between 40 and 42 °C. The question was fixed as: which physical change, in the catalyst, the dye or the water around them, switches the speed-up off at 41 °C?",
+      "status": "done",
+      "by": [{ "name": "Mina Sampleworth", "kind": "person" }],
+      "date": "2021-05",
+      "links": [{ "title": "Original problem statement (sample link)", "url": "https://example.org/mirelle/statement" }]
+    },
+    {
+      "id": "rate-map",
+      "title": "Reaction rate mapped from 5 to 80 °C in 1-degree steps",
+      "description": "An automated rig measured the rate at every temperature, with and without the catalyst. An AI system planned the runs and fitted the data. The switch is sharp: it happens within about 1 °C.",
+      "status": "done",
+      "by": [
+        { "name": "Sample Catalysis Group", "kind": "group" },
+        { "name": "Example Lab Agent", "kind": "ai" }
+      ],
+      "date": "2022-11-08",
+      "links": [
+        { "title": "Rate data (sample link)", "url": "https://example.org/mirelle/rate-data" },
+        { "title": "Run plan and fitting code (sample link)", "url": "https://example.org/mirelle/fitting-code" }
+      ]
+    },
+    {
+      "id": "structure-change-search",
+      "title": "Search for a structural change in the catalyst at 41 °C",
+      "description": "The first idea was that the catalyst's layers shift at 41 °C and close off its active sites. X-ray diffraction patterns taken at 35 °C and 45 °C were identical, so the structure does not change. Do not retry this route without evidence of a change that X-rays cannot detect.",
+      "status": "dead-end",
+      "by": [{ "name": "Mina Sampleworth", "kind": "person" }],
+      "date": "2023-09",
+      "links": [{ "title": "X-ray comparison write-up (sample link)", "url": "https://example.org/mirelle/xray-notes" }]
+    },
+    {
+      "id": "water-layer-model",
+      "title": "A thin layer of bound water causes the switch",
+      "description": "Simulations suggest that an ordered layer of water on the catalyst holds the dye in the right position to react, and that this layer breaks up at 41 °C. Others argue that the simulated layer breaks up too sharply to be trusted, and no experiment has tested the model yet.",
+      "status": "disputed",
+      "by": [
+        { "name": "Oskar Demoford", "kind": "person" },
+        { "name": "Example Simulation Agent", "kind": "ai" }
+      ],
+      "date": "2025-02",
+      "links": [
+        { "title": "Model preprint (sample link)", "url": "https://example.org/mirelle/water-layer-preprint" },
+        { "title": "Critique and discussion (sample link)", "url": "https://example.org/mirelle/water-layer-discussion" }
+      ]
+    },
+    {
+      "id": "heavy-water-test",
+      "title": "Test the bound-water model in heavy water",
+      "description": "Heavy water forms slightly stronger bonds than ordinary water, so the model predicts that the switch moves up by about 4 °C in heavy water. The measurements are under way. A shift near zero would count against the model.",
+      "status": "in-progress",
+      "by": [{ "name": "Sample Catalysis Group", "kind": "group" }],
+      "date": "2026-03",
+      "links": [{ "title": "Open lab notebook (sample link)", "url": "https://example.org/mirelle/heavy-water-notebook" }]
+    },
+    {
+      "id": "independent-confirmation",
+      "title": "Mechanism confirmed by an independent lab",
+      "description": "Whichever mechanism survives the tests must be reproduced by a second lab before the puzzle counts as solved.",
+      "status": "not-started"
+    }
+  ],
+  "sources": [
+    {
+      "title": "A layered oxide catalyst that only works when cool (sample source)",
+      "url": "https://example.org/papers/mirelle-catalyst",
+      "kind": "paper",
+      "authors": ["Mina Sampleworth", "Oskar Demoford"],
+      "year": 2021
+    },
+    {
+      "title": "Mirelle catalyst rate measurements, 5-80 °C (sample source)",
+      "url": "https://example.org/datasets/mirelle-rates",
+      "kind": "dataset",
+      "year": 2022
+    },
+    {
+      "title": "A bound-water model for the Mirelle switch (sample source)",
+      "url": "https://example.org/preprints/mirelle-water-layer",
+      "kind": "preprint",
+      "authors": ["Oskar Demoford"],
+      "year": 2025
+    }
+  ],
+  "sample": true,
+  "updated": "2026-09-18"
+}
