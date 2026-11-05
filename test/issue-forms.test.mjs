@@ -9,7 +9,7 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { ROOT } from '../scripts/lib/problems.mjs';
-import { NEW_PROBLEM_FORM, PROGRESS_FORM } from '../site/src/config.mjs';
+import { NEW_PROBLEM_FORM, PROGRESS_FORM, PROGRESS_TITLE } from '../site/src/config.mjs';
 
 const FORMS = path.join(ROOT, '.github', 'ISSUE_TEMPLATE');
 const read = (name) => readFile(path.join(FORMS, name), 'utf8');
@@ -23,6 +23,7 @@ describe('the issue forms', () => {
     const form = await read(PROGRESS_FORM);
     const ids = fieldIds(form);
     for (const id of ['problem', 'checkpoint']) assert.ok(ids.includes(id), `${PROGRESS_FORM} has no "${id}" field`);
+    assert.ok(form.includes(`\ntitle: "${PROGRESS_TITLE}"\n`), `${PROGRESS_FORM}'s title must start like the site's links: "${PROGRESS_TITLE}"`);
     assert.deepEqual(ids, [...new Set(ids)], 'field ids are unique');
   });
 
@@ -44,7 +45,7 @@ describe('the issue forms', () => {
     for (const name of [PROGRESS_FORM, NEW_PROBLEM_FORM]) {
       const form = await read(name);
       assert.match(form, /\*\*Link, don't copy\.\*\*/, name);
-      assert.match(form, /can be added to STEMularity under CC BY 4\.0/, name);
+      assert.ok(form.includes('can be added to STEMularity under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)'), name);
       assert.ok(!form.includes('\t'), `${name} has a tab, which YAML does not allow for indentation`);
     }
   });

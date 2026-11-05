@@ -15,6 +15,7 @@ import { BUILD_MARKER, BuildError, build, checkOutDir } from '../site/build.mjs'
 import { createServer } from '../site/serve.mjs';
 import { escapeHtml, externalLink, html, safeUrl } from '../site/src/html.mjs';
 import { formatDate, formatYear, truncate } from '../site/src/format.mjs';
+import { PROGRESS_FORM, newIssueUrl } from '../site/src/config.mjs';
 import { DEFAULT_DATA_DIR, ROOT, loadProblems } from '../scripts/lib/problems.mjs';
 
 // Child processes must not think they are part of this test run.
@@ -388,17 +389,27 @@ describe('build from data/', () => {
   it('links each problem, and each of its steps, to a filled-in progress report', () => {
     const report = (problem, step) => {
       const title = encodeURIComponent(`[Progress] ${problem.name}`);
-      const query = `template=progress-update.yml&title=${title}&problem=${encodeURIComponent(problem.id)}${step ? `&checkpoint=${encodeURIComponent(step.id)}` : ''}`;
-      // The page writes the address inside an attribute, so each & is escaped.
-      return `href="https://github.com/gearashi/STEMularity/issues/new?${query.replaceAll('&', '&amp;')}"`;
+      const query = `template=1-progress-update.yml&title=${title}&problem=${encodeURIComponent(problem.id)}${step ? `&checkpoint=${encodeURIComponent(step.id)}` : ''}`;
+      // The page writes the address inside an attribute, so it is HTML-escaped
+      // there: each & becomes &amp;, and an apostrophe in a name becomes &#39;.
+      return `href="${escapeHtml(`https://github.com/gearashi/STEMularity/issues/new?${query}`)}"`;
     };
     for (const problem of realProblems) {
       const page = files.get(`problems/${problem.id}/index.html`);
       assert.ok(page.includes(`${report(problem)} rel="noopener noreferrer">Report progress</a>`), problem.id);
-      for (const step of problem.progress) assert.ok(page.includes(report(problem, step)), `${problem.id}: ${step.id}`);
+      for (const step of problem.progress) {
+        // Each step's link names its step, for people who use screen readers.
+        const link = `${report(problem, step)} rel="noopener noreferrer">Report progress on this step<span class="visually-hidden">: ${escapeHtml(step.title)}</span></a>`;
+        assert.ok(page.includes(link), `${problem.id}: ${step.id}`);
+      }
     }
-    assert.ok(files.get('index.html').includes('href="https://github.com/gearashi/STEMularity/issues/new?template=new-problem.yml" rel="noopener noreferrer">Suggest a problem</a>'));
-    assert.ok(files.get('about/index.html').includes('href="https://github.com/gearashi/STEMularity/issues/new?template=new-problem.yml"'));
+    assert.ok(files.get('index.html').includes('href="https://github.com/gearashi/STEMularity/issues/new?template=2-new-problem.yml" rel="noopener noreferrer">Suggest a problem</a>'));
+    assert.ok(files.get('about/index.html').includes('href="https://github.com/gearashi/STEMularity/issues/new?template=2-new-problem.yml"'));
+  });
+
+  it('builds issue links from any text, even a lone surrogate', () => {
+    const url = newIssueUrl(PROGRESS_FORM, { title: 'Lone \ud800 surrogate', problem: "it's & <this>" });
+    assert.equal(url, 'https://github.com/gearashi/STEMularity/issues/new?template=1-progress-update.yml&title=Lone%20%EF%BF%BD%20surrogate&problem=it\'s%20%26%20%3Cthis%3E');
   });
 
   it('shows the sample-data banner on every page while samples exist', () => {

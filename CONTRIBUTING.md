@@ -4,7 +4,7 @@ Anyone can contribute. The progress maps stay up to date because people report w
 
 There are two ways to help:
 
-1. **Report it in an issue.** No Git or JSON needed. This is how most updates arrive. See [Report progress in an issue](#report-progress-in-an-issue).
+1. **Report it in an issue.** No Git or JSON needed, only a free GitHub account. This is how most updates arrive. See [Report progress in an issue](#report-progress-in-an-issue).
 2. **Change the files yourself** with a pull request, if you know Git. See [Change the files yourself](#change-the-files-yourself).
 
 Every change to the files goes through a pull request, often one made from an issue, so every change is public and reviewed. By contributing, you agree to the [Open-Knowledge Pledge](README.md#the-open-knowledge-pledge) and to the [licensing terms below](#licensing-of-contributions).
@@ -16,17 +16,19 @@ Open a [new issue](https://github.com/gearashi/STEMularity/issues/new/choose) an
 - **Report progress on a problem**: a new result or milestone, work that has started, a failed attempt, a disputed claim, a new source, or a correction. On the website, each problem page has a "Report progress" button, and each checkpoint a "Report progress on this step" link, that open this form with the problem (and the step) filled in.
 - **Suggest a new problem**: a problem that isn't in the index yet.
 
-Fill in:
+In the progress form, fill in:
 
 - **What happened**, in your own words. Don't paste text from papers.
 - **Links to the work**: the paper, preprint, code, data, write-up or discussion. Link, don't copy: don't attach copies of papers to the issue either.
-- **Who did the work**, and **whether AI was involved**, so everyone gets credit.
+- **Who did the work**, and **whether AI was involved**, so everyone gets credit. For a disputed claim, name who made the claim.
 - **When** it happened, if you know.
+
+The new-problem form asks for the problem's name, field, status, a summary in your own words, the progress so far, and links to sources.
 
 Then:
 
 - Anyone can add details or links in the comments, or say why they think a claim is wrong.
-- If you are starting work on a step, say so with the "Work has started on a step" option. Others will see it on the map before they start the same work.
+- If you are starting work on a step, say so with the "Work has started on a step" option. Once your report is turned into a change, the step shows as in progress on the map. Until then your issue is the record, so before you start on a step, check the open issues for that problem.
 - Someone turns the report into a pull request that updates the problem's file, as described in [Turn a report into a change](#turn-a-report-into-a-change). The pull request says `Closes #<issue number>`, so the issue closes when the map is updated.
 
 ## Turn a report into a change
@@ -40,19 +42,20 @@ Maintainers do this, and so can any contributor who knows Git. Follow [Set up](#
    | --- | --- |
    | A step was reached | Set the checkpoint to `done`, or add a new `done` checkpoint where it belongs on the route. Add `by`, `date` and `links`. |
    | Work has started on a step | Set it to `in-progress` and add `by`, plus the start `date` if known. |
-   | An attempt failed | Add or update a `dead-end` checkpoint, and say why it failed in its `description`. |
-   | A claim is disputed | Set it to `disputed`, with `by` and `date`, and link to the claim and to the replies. |
+   | An attempt failed | Add or update a `dead-end` checkpoint with `by` and `date` (when the attempt was given up), and say why it failed in its `description`. |
+   | A claim is disputed | Set the step to `disputed`. `by` is the people who made the claim, and `date` is when they made it. Say who disputes it, and why, in its `description`, and link to the claim and to the replies. |
    | A new source | Add it to `sources`. |
    | A correction | Fix the field, and say what changed in the pull request. |
 
-3. Credit everyone named under "Who did the work?" in `by`. If AI was involved, add the AI system with `"kind": "ai"` next to the people who directed or checked it. Ask in the issue if a name is missing.
-4. Check that the links work and point to the work itself. Summarize in your own words.
-5. Only mark a step `done` when a source shows the result is accepted. If you can't confirm a report, ask in the issue, or record it as `disputed`.
-6. Set `updated` to today's date, run `npm run validate`, and open a pull request that says `Closes #<issue number>`. Thank the reporter.
+3. Check the whole entry, as in [Update a problem or checkpoint](#update-a-problem-or-checkpoint): make sure `ai_effort` still fits, and if the problem is now solved or resolved, change `status` and remove `ratings`.
+4. Credit everyone named under "Who did the work?" in `by` (for a disputed claim, the people who made the claim). If AI was involved, add the AI system with `"kind": "ai"` next to the people who directed or checked it. Ask in the issue if a name is missing.
+5. Check that the links work and point to the work itself. Summarize in your own words.
+6. Only mark a step `done` when a source shows the result is accepted. If you can't confirm a report, ask in the issue, or record it as `disputed`.
+7. Set `updated` to today's date, run `npm run validate`, and open a pull request that says `Closes #<issue number>`. Thank the reporter.
 
 ## Change the files yourself
 
-The rest of this guide is for changing the files directly, with Git and a pull request.
+The sections from [Set up](#set-up) to [Checks on pull requests](#checks-on-pull-requests) are for changing the files directly, with Git and a pull request. [Content rules](#content-rules), [Licensing of contributions](#licensing-of-contributions) and [Be kind](#be-kind) apply to everyone, including issue reports.
 
 ## Set up
 

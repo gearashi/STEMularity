@@ -69,7 +69,7 @@ The JSON files are a first, static step toward the API for AI agents in the [roa
 
 ## Reporting progress
 
-Each problem page has a "Report progress" button, and each checkpoint a "Report progress on this step" link. They open the progress-report issue form on GitHub, from [`.github/ISSUE_TEMPLATE/`](../.github/ISSUE_TEMPLATE/), with the title, the problem's id and the checkpoint's id filled in. The problem list and the About page link to the new-problem form. [`test/issue-forms.test.mjs`](../test/issue-forms.test.mjs) checks that the forms keep the field ids the site fills in, and the field, status and AI effort options from `vocabulary.json`.
+Each problem page has a "Report progress" button, and each checkpoint a "Report progress on this step" link. They open the progress-report issue form on GitHub, from [`.github/ISSUE_TEMPLATE/`](../.github/ISSUE_TEMPLATE/), with the title and the problem's id filled in, and, for a step's link, the checkpoint's id too. The problem list and the About page link to the new-problem form. [`test/issue-forms.test.mjs`](../test/issue-forms.test.mjs) checks that the forms keep the field ids the site fills in, and the field, status and AI effort options from `vocabulary.json`.
 
 ## The problem list
 

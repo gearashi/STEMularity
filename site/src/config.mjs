@@ -19,8 +19,11 @@ export function repoEditUrl(file) {
 // The issue forms in .github/ISSUE_TEMPLATE/. Most community updates arrive
 // through them: someone reports progress, with links, and the report is
 // turned into a change to the problem's file.
-export const PROGRESS_FORM = 'progress-update.yml';
-export const NEW_PROBLEM_FORM = 'new-problem.yml';
+// The numbers order them in GitHub's form chooser: progress reports first.
+export const PROGRESS_FORM = '1-progress-update.yml';
+export const NEW_PROBLEM_FORM = '2-new-problem.yml';
+// The progress form's default title, which the site's links fill in with the problem's name.
+export const PROGRESS_TITLE = '[Progress] ';
 
 /**
  * GitHub's "new issue" page for an issue form, with fields filled in. Keys are
@@ -28,7 +31,8 @@ export const NEW_PROBLEM_FORM = 'new-problem.yml';
  */
 export function newIssueUrl(form, fields = {}) {
   const query = Object.entries({ template: form, ...fields })
-    .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+    // toWellFormed() turns a lone surrogate into U+FFFD, which encodeURIComponent() would reject.
+    .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(String(value).toWellFormed())}`)
     .join('&');
   return `${REPO_URL}/issues/new?${query}`;
 }

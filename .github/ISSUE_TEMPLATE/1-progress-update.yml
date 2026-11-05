@@ -13,7 +13,7 @@ body:
     id: problem
     attributes:
       label: Problem
-      description: The problem's id or name, as shown on its page on the STEMularity site.
+      description: The problem's name, or its id, which is its file name in [data/problems/](https://github.com/gearashi/STEMularity/tree/main/data/problems) without .json.
       placeholder: lanternfish-tiling-conjecture
     validations:
       required: true
@@ -35,7 +35,7 @@ body:
     id: checkpoint
     attributes:
       label: Checkpoint
-      description: The id of the step this is about, from the step's link on the problem page. Leave it empty for a new step, or if you aren't sure.
+      description: Filled in for you when you use a step's "Report progress on this step" link on the site. Otherwise give the step's title. Leave it empty for a new step, or if you aren't sure.
       placeholder: patch-search
   - type: textarea
     id: details
@@ -48,17 +48,15 @@ body:
     id: links
     attributes:
       label: Links to the work
-      description: One link per line, to the paper, preprint, code, data, write-up or discussion. Each link starts with http:// or https://.
+      description: One link per line, to the paper, preprint, code, data, write-up or discussion. Each link starts with http:// or https://. Needed for a new result, a failed attempt, a disputed claim or a new source. If you are only starting work, link to your repository or notes if you have any.
       placeholder: |
         https://arxiv.org/abs/...
         https://github.com/...
-    validations:
-      required: true
   - type: input
     id: who
     attributes:
       label: Who did the work?
-      description: The people, groups and AI systems that took part. Write "me" for your own work.
+      description: The people, groups and AI systems that took part. Write "me" for your own work. For a disputed claim, name who made the claim.
   - type: dropdown
     id: ai
     attributes:
@@ -75,7 +73,7 @@ body:
     id: date
     attributes:
       label: When?
-      description: When the result was reached, the work started, or the attempt was given up, as YYYY, YYYY-MM or YYYY-MM-DD.
+      description: When the result was reached, the claim was made, the work started, or the attempt was given up, as YYYY, YYYY-MM or YYYY-MM-DD.
       placeholder: "2026-11-04"
   - type: checkboxes
     id: terms
@@ -84,5 +82,5 @@ body:
       options:
         - label: I wrote this in my own words, and I linked to sources instead of attaching copies of papers.
           required: true
-        - label: I agree that what I write here can be added to STEMularity under CC BY 4.0, and I follow the [Open-Knowledge Pledge](https://github.com/gearashi/STEMularity/blob/main/README.md#the-open-knowledge-pledge).
+        - label: I agree that what I write here can be added to STEMularity under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), and I follow the [Open-Knowledge Pledge](https://github.com/gearashi/STEMularity/blob/main/README.md#the-open-knowledge-pledge).
           required: true

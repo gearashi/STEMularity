@@ -47,7 +47,7 @@ body:
     id: status
     attributes:
       label: Status
-      description: Where the problem stands. The About page on the STEMularity site explains each status.
+      description: Where the problem stands. [How it works](https://github.com/gearashi/STEMularity/blob/main/README.md#how-it-works) explains each status.
       options:
         - "Open: not settled, and open-ended"
         - "Unsolved: precisely stated, but no accepted answer yet"
@@ -113,7 +113,7 @@ body:
     id: ai-effort
     attributes:
       label: Recommended AI effort
-      description: How much AI reasoning effort the next open step needs.
+      description: How much AI reasoning effort working on the problem needs now, for its next open step, or, if none is open, for checking and building on the recorded work.
       options:
         - "Low"
         - "Medium"
@@ -129,5 +129,5 @@ body:
           required: true
         - label: I wrote this in my own words, and I linked to sources instead of attaching copies of papers.
           required: true
-        - label: I agree that what I write here can be added to STEMularity under CC BY 4.0, and I follow the [Open-Knowledge Pledge](https://github.com/gearashi/STEMularity/blob/main/README.md#the-open-knowledge-pledge).
+        - label: I agree that what I write here can be added to STEMularity under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), and I follow the [Open-Knowledge Pledge](https://github.com/gearashi/STEMularity/blob/main/README.md#the-open-knowledge-pledge).
           required: true

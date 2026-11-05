@@ -9,7 +9,7 @@ import { externalLink, html, raw } from './html.mjs';
 import { formatDate, formatYear, isBceDate, plural, truncate } from './format.mjs';
 import { marker, markerSprite } from './icons.mjs';
 import { layout } from './layout.mjs';
-import { CC_BY_URL, NEW_PROBLEM_FORM, PROGRESS_FORM, REPO_URL, newIssueUrl, repoEditUrl, repoFileUrl } from './config.mjs';
+import { CC_BY_URL, NEW_PROBLEM_FORM, PROGRESS_FORM, PROGRESS_TITLE, REPO_URL, newIssueUrl, repoEditUrl, repoFileUrl } from './config.mjs';
 
 const SITE_DESCRIPTION =
   'An open index of open, unsolved, solved and resolved STEM problems, each with a checkpoint-style progress map.';
@@ -374,7 +374,7 @@ function progressSummary(steps, v) {
 
 /** The progress-report issue form, filled in for a problem (and one of its checkpoints). */
 function progressReportUrl(problem, step) {
-  const fields = { title: `[Progress] ${problem.name}`, problem: problem.id };
+  const fields = { title: `${PROGRESS_TITLE}${problem.name}`, problem: problem.id };
   if (step) fields.checkpoint = step.id;
   return newIssueUrl(PROGRESS_FORM, fields);
 }

@@ -99,7 +99,7 @@ npm run preview    # build the site and serve it at http://127.0.0.1:8788
 
 ## Contributing
 
-The progress maps stay up to date because people report what they find. The easiest way to help is a GitHub issue: [open an issue](https://github.com/gearashi/STEMularity/issues/new/choose) with the **Report progress on a problem** form, say what happened, and link to the work. The site's problem pages link to that form with the problem filled in. To add a problem, use the **Suggest a new problem** form. Each report is turned into a change to the problem's file, with everyone who did the work credited.
+The progress maps stay up to date because people report what they find. The easiest way to help is a GitHub issue (you need a free GitHub account): [open an issue](https://github.com/gearashi/STEMularity/issues/new/choose) with the **Report progress on a problem** form, say what happened, and link to the work. The site's problem pages link to that form with the problem filled in. To add a problem, use the **Suggest a new problem** form. Each report is turned into a change to the problem's file, with everyone who did the work credited.
 
 If you know Git, you can also change the files yourself with a pull request. [CONTRIBUTING.md](CONTRIBUTING.md) explains both routes.
 
@@ -124,6 +124,7 @@ A shorter form is "STEMularity contributors, CC BY 4.0", with links to the repos
 
 Planned for later:
 
+- automation that turns progress reports in GitHub issues into pull requests, for people to review,
 - accounts, with claim and spot locking for checkpoints,
 - uploading work to a checkpoint,
 - an API for AI agents,
